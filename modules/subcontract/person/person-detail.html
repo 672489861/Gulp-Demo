@@ -1,0 +1,150 @@
+<ion-view view-title="劳务人员信息详细">
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="baseInfo=!baseInfo"
+                 ng-init="baseInfo = true;">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="baseInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="baseInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%" class="has-photo" rowspan="5">
+                            <img ng-src="{{personDetail.photourl}}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.name}}</td>
+                    </tr>
+                    <tr>
+                        <td align="">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.sex
+                            == 0 ?"男":"女"}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="">民&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;族： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.minority}}</td>
+                    </tr>
+                    <tr>
+                        <td align="">出生日期： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.birthday}}</td>
+                    </tr>
+                    <tr>
+                        <td>人员编号</td>
+                        <td align="right">{{personDetail.number}}</td>
+                    </tr>
+                    <tr>
+                        <td>身份证号</td>
+                        <td align="right">{{personDetail.idcard}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{personDetail.telphone}}</td>
+                    </tr>
+                    <tr>
+                        <td>文化程度</td>
+                        <td align="right">{{personDetail.education}}</td>
+                    </tr>
+                    <tr>
+                        <td>籍贯</td>
+                        <td align="right">{{personDetail.nativeplace}}</td>
+                    </tr>
+                    <tr>
+                        <td>住址</td>
+                        <td align="right">{{personDetail.address}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="workInfo=!workInfo"
+                 ng-init="workInfo = true;">
+                <p>劳务信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="workInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td>劳动合同编号</td>
+                        <td align="right">{{personDetail.contractNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>工种</td>
+                        <td align="right">{{personDetail.worktypeName}}</td>
+                    </tr>
+                    <tr>
+                        <td>特殊工种</td>
+                        <td align="right">{{personDetail.isspecial}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">进场时间</td>
+                        <td align="right">{{personDetail.inTime}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">退场时间</td>
+                        <td align="right">{{personDetail.outTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>当前人员状态</td>
+                        <td align="right">{{personDetail.outTime == null ? "正常工作" : "已退场"}}</td>
+                    </tr>
+                    <tr>
+                        <td>附件</td>
+                        <td align="right"><a ng-click="download(normalAttach[0]);">{{normalAttach[0].name}}&nbsp;({{normalAttach[0].fileSize}})</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="workTime = true;"
+                 ng-click="workTime=!workTime">
+                <p>本月累计考勤</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workTime?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="workTime">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td>累计工时</td>
+                        <td align="right">{{workHours}}</td>
+                    </tr>
+                    <tr>
+                        <td>累计工日</td>
+                        <td align="right">{{workDays}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="attachment = true;"
+                 ng-click="attachment=!attachment">
+                <p>证件证书</p>
+                <i class="icon ion-ios-arrow-up" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-light item-grid nopadding" style="margin-top: 1px" ng-show="attachment">
+                <div ng-repeat="attach in specialAttach" ng-click="download(attach);">
+                    <img ng-src="{{attach.name | showAttachIcon}}">
+
+                    <p class="text-wrap">{{person.attachName}}</p>
+
+                    <p>有效期至</p>
+
+                    <p>{{attach.effective}}</p>
+
+                    <p>{{attach.fileSize}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+    <style type="text/css">
+        .has-photo {
+            text-align: left;
+            vertical-align: bottom;
+            padding: 0 !important;
+        }
+
+        .has-photo img {
+            max-width: 95%;
+            height: 130px;
+        }
+    </style>
+</ion-view>
+

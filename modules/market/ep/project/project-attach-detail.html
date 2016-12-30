@@ -1,0 +1,24 @@
+<ion-view view-title="附件">
+    <ion-content>
+        <div class="list">
+            <div class="item">
+                附件内容
+                <span class="item-note">{{attaches[0].typeId|prjAttachType}}</span>
+            </div>
+            <div class="item">
+                档案存放地
+                <span class="item-note">{{attaches[0].orgName}}</span>
+            </div>
+            <div class="item item-icon-right item-link" ng-click="attachmentShow()">
+                附件
+                <i class="icon" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-grid nopadding" ng-show="attachment">
+                <div ng-repeat="attach in attaches" ng-click="download(attach)">
+                    <img src="{{attach.name|showAttachIcon}}">
+                    <p>{{attach.name}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

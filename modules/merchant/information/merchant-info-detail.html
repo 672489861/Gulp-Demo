@@ -1,0 +1,213 @@
+<ion-view>
+    <ion-nav-title>
+        {{merchantDetail.kindname}}
+    </ion-nav-title>
+    <ion-content>
+        <!-- 标题 开始 -->
+        <h3 class="page-detail-title text-center">{{merchantDetail.name}}</h3>
+        <p class="nomargin text-center padding-bottom light-bg">客商编号：{{merchantDetail.number}}</p>
+        <!-- 标题 结束 -->
+        <div class="list">
+            <!-- 标识信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="identificationShow()">
+                <p>标识信息</p>
+                <i class="icon" ng-class="identification?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-if="merchantDetail.identityId!=null" ng-show="identification">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">身份</td>
+                        <td align="right">{{merchantDetail.identityname}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.identityId==1">
+                        <td>组织机构代码</td>
+                        <td align="right">{{merchantDetail.code}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.identityId==2">
+                        <td>身份证号</td>
+                        <td align="right">{{merchantDetail.idCard}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item nopadding-vertical" ng-if="merchantDetail.unifiedSocialCode!=null&&merchantDetail.unifiedSocialCode!=''" ng-show="identification">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">统一社会信用代码</td>
+                        <td align="right">{{merchantDetail.unifiedSocialCode}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 标识信息 结束 -->
+            <!-- 基本信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="essentialShow()">
+                <p>基本信息</p>
+                <i class="icon" ng-class="essential?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="essential">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">客商类型</td>
+                        <td align="right">{{merchantDetail.typename}}</td>
+                    </tr>
+                    <tr>
+                        <td>营业执照号</td>
+                        <td align="right">{{merchantDetail.licenseNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>纳税资格</td>
+                        <td align="right">{{merchantDetail.taxqualificationname}}</td>
+                    </tr>
+                    <tr>
+                        <td>税号</td>
+                        <td align="right">{{merchantDetail.taxCode}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.registeredCapital!=null">
+                        <td>注册资金（万元）</td>
+                        <td align="right">{{merchantDetail.registeredCapital}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.bank!=''">
+                        <td>开户银行</td>
+                        <td align="right">{{merchantDetail.bank}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.bankAccount!=''">
+                        <td>银行账号</td>
+                        <td align="right">{{merchantDetail.bankAccount}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.legalPerson!=''">
+                        <td>法定代表人</td>
+                        <td align="right">{{merchantDetail.legalPerson}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.contact!=''">
+                        <td>联系方式</td>
+                        <td align="right">{{merchantDetail.contact}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.homePage!=''">
+                        <td>网址首页</td>
+                        <td align="right">{{merchantDetail.homePage}}</td>
+                    </tr>
+                    <tr>
+                        <td>注册地址</td>
+                        <td align="right">{{merchantDetail.provincename}}{{merchantDetail.cityname}}{{merchantDetail.detailAddress}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.businessScope!=''">
+                        <td width="30%">经营范围</td>
+                        <td align="right" class="text-left">{{merchantDetail.businessScope}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 基本信息 结束 -->
+            <!-- 附件 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="attachmentShow()" ng-if="merchantBaseAttach!=''">
+                <p>附件</p>
+                <i class="icon" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="attachment" ng-if="merchantDetail.unifiedSocialCode == ''">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="merchantBaseAttachList in merchantBaseAttach"
+                        ui-sref="merchant/information/merchant-attachment-detail({merchantBaseAttachList: merchantBaseAttachList})">
+                        <td ng-if="merchantBaseAttachList.type==1" width="35%">组织机构代码证</td>
+                        <td ng-if="merchantBaseAttachList.type==2">营业执照</td>
+                        <td ng-if="merchantBaseAttachList.type==3">税务登记证</td>
+                        <td ng-if="merchantBaseAttachList.type==4"width="50%">一般纳税人资格认定</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item nopadding-vertical" ng-show="attachment" ng-if="merchantDetail.unifiedSocialCode != ''">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="merchantBaseAttachList in merchantBaseAttach" ng-if="merchantBaseAttachList.type==2 || merchantBaseAttachList.type==4"
+                        ui-sref="merchant/information/merchant-attachment-detail({merchantBaseAttachList: merchantBaseAttachList})">
+                        <td ng-if="merchantBaseAttachList.type==2">营业执照</td>
+                        <td ng-if="merchantBaseAttachList.type==4"width="50%">一般纳税人资格认定</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 附件 结束 -->
+            <!-- 资质信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="qualificationShow()" ng-if="merchantDetail.typeId!=null&&merchantDetail.typeId==2">
+                <p>资质信息</p>
+                <i class="icon" ng-class="qualification?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="qualification" ng-if="merchantDetail.typeId!=null&&merchantDetail.typeId==2">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="merchantQualificationList in merchantQualification"
+                        ui-sref="merchant/information/merchant-qualification-detail({merchantQualificationDetail:merchantQualificationList})">
+                        <td>{{merchantQualificationList.qualificationName}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 资质信息 结束 -->
+            <!-- 安全生产许可证信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="licenseShow()">
+                <p>安全生产许可证信息</p>
+                <i class="icon" ng-class="license?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="license">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="merchantSafetyPermitList in merchantSafetyPermit"
+                            ui-sref="merchant/information/merchant-safety-permit-detail({merchantSafetyPermitDetail:merchantSafetyPermitList})">
+                        <td>{{merchantSafetyPermitList.name}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 安全生产许可证信息 结束 -->
+            <!-- 联系人信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="contractShow()" ng-if="merchantDetail.orgType!=null&&merchantDetail.orgType==3">
+                <p>联系人信息</p>
+                <i class="icon" ng-class="contract?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-if="merchantDetail.orgType!=null&&merchantDetail.orgType==3" ng-show="contract">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">联系人</td>
+                        <td align="right">{{merchantDetail.contactPerson}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系人手机</td>
+                        <td align="right">{{merchantDetail.contactPersonCellPhone}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.contactPersonPhone!=''">
+                        <td>固话</td>
+                        <td align="right">{{merchantDetail.contactPersonPhone}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.fax!=''">
+                        <td>传真</td>
+                        <td align="right">{{merchantDetail.fax}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.email!=''">
+                        <td>邮箱</td>
+                        <td align="right">{{merchantDetail.email}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.zipCode!=''">
+                        <td>邮编</td>
+                        <td align="right">{{merchantDetail.zipCode}}</td>
+                    </tr>
+                    <tr ng-if="merchantDetail.contactprovincename!=''&&merchantDetail.contactprovincename!=null">
+                        <td>通信地址</td>
+                        <td align="right">{{merchantDetail.contactprovincename}}{{merchantDetail.contactcityname}}{{merchantDetail.contactDetailAddress}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 联系人信息 结束 -->
+        </div>
+    </ion-content>
+</ion-view>

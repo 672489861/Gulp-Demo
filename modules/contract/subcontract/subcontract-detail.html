@@ -1,0 +1,192 @@
+<ion-view view-title="分包合同">
+    <ion-content>
+        <!-- 标题 开始 -->
+        <h3 class="page-detail-title font-bold text-center">{{subcontractInfo.contractName}}</h3>
+        <p class="nomargin text-center padding-bottom light-bg">合同编号：{{subcontractInfo.displayId}}</p>
+        <!-- 标题 结束 -->
+        <div class="list">
+            <!-- 副标题 开始 -->
+            <div class="item item-title">
+                <p class="f14 font-bold">发包方：{{subcontractInfo.ownerOrgName}}</p>
+
+                <p class="f14 font-bold">承包方：{{subcontractInfo.merchantName}}</p>
+            </div>
+            <!-- 副标题 结束 -->
+            <!-- 工程概况 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectInfoShow()">
+                <p>工程概况</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、工程名称</td>
+                        <td align="right">{{subcontractInfo.contractName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、工程地点</td>
+                        <td align="right">{{subcontractInfo.projectAddress}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 工程概况 结束 -->
+            <!-- 分包方式及分包内容 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="subcontractDetailShow()">
+                <p>分包方式及分包内容</p>
+                <i class="icon ion-ios-arrow-up"
+                   ng-class="subcontractDetail?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="subcontractDetail">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td>1、分包方式</td>
+                        <td align="right">{{subcontractInfo.modeName}}</td>
+                    </tr>
+                    <tr>
+                        <td>2、分包范围</td>
+                        <td align="right">{{subcontractInfo.scope}}</td>
+                    </tr>
+                    <tr ui-sref="contract/subcontract/subcontract-info">
+                        <td>3、分包内容</td>
+                        <td align="right" class="link">{{subcontractLength}}条<i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    <tr ui-sref="contract/subcontract/charges-info">
+                        <td width="50%">4、分包价外费用信息</td>
+                        <td align="right" class="link">{{chargesLength}}条<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr>
+                        <td>5、技术要求</td>
+                        <td align="right">{{subcontractInfo.technicalRequirement}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 分包方式及分包内容 结束 -->
+            <!-- 结算方式及付款 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="workmoneyShow()">
+                <p>结算方式及付款</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workmoney?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="workmoney">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="40%">1、工程量计算方法</td>
+                        <td align="right" class="text-left">{{subcontractInfo.quantitiesCalc}}</td>
+                    </tr>
+                    <tr>
+                        <td>2、结算综合单价</td>
+                        <td align="right" class="text-left">{{subcontractInfo.priceCalc}}</td>
+                    </tr>
+                    <tr>
+                        <td>3、合同价款</td>
+                        <td align="right">{{subcontractInfo.cost | currency:'￥'}}（{{subcontractInfo.hasTax == 1 ? '含税' :
+                            '不含税'}}）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 21px">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;写</td>
+                        <td align="right">{{formatMoney}}</td>
+                    </tr>
+                    <tr>
+                        <td>4、付款方式</td>
+                        <td align="right">{{subcontractInfo.payment}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 结算方式及付款 结束 -->
+            <!-- 税务发票约定 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="billShow()">
+                <p>税务发票约定</p>
+                <i class="icon ion-ios-arrow-up" ng-class="bill?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="bill">
+                <table class="table-row">
+                    <tbody>
+                    <tr ui-sref="contract/subcontract/invoice-info">
+                        <td>1、税务发票约定</td>
+                        <td align="right" class="link">{{invoiceLength}}条<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 税务发票约定 结束 -->
+            <!-- 合同工期 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="worktimeShow()">
+                <p>合同工期</p>
+                <i class="icon ion-ios-arrow-up" ng-class="worktime?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="worktime">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、开始时间</td>
+                        <td align="right">{{subcontractInfo.beginDate}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、结束时间</td>
+                        <td align="right">{{subcontractInfo.endDate}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、总日历天数</td>
+                        <td align="right">{{subcontractInfo.totalDays}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 合同工期 结束 -->
+            <!-- 质量/安全、文明管理 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="qualityShow()">
+                <p>质量/安全、文明管理</p>
+                <i class="icon ion-ios-arrow-up" ng-class="quality?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="quality">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、质量目标</td>
+                        <td align="right">{{subcontractInfo.qualityTarget}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、安全文明目标</td>
+                        <td align="right">{{subcontractInfo.safetyTarget}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 质量/安全、文明管理 结束 -->
+            <!-- 备注信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="remarkShow()">
+                <p>备注信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="remark?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="remark">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td colspan="2" ng-bind-html="memo"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 备注信息 结束 -->
+            <!-- 附件信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="attachmentShow()">
+                <p>附件信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-light item-grid nopadding" style="margin-top: 1px" ng-show="attachment">
+                <div ng-repeat="item in attachInfo" ng-click="downloadAttach(item)">
+                    <img src="{{item.name | showAttachIcon}}">
+                    <p>{{item.name}}<br/>({{item.fileSize}})</p>
+                </div>
+            </div>
+            <!-- 附件信息 结束 -->
+        </div>
+    </ion-content>
+</ion-view>

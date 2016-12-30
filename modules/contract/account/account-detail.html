@@ -1,0 +1,95 @@
+<ion-view view-title="产值一览">
+    <ion-content>
+        <!-- 标题 开始 -->
+        <h3 class="page-detail-title font-bold text-center">建设工程施工总承包合同</h3>
+
+        <p class="nomargin text-center padding-bottom light-bg">合同编号：{{detail.displayId}}</p>
+        <!-- 标题 结束 -->
+        <div class="list">
+            <!-- 副标题 开始 -->
+            <div class="item item-title">
+                <p class="f14 font-bold">本月完成产值（万元）：{{detail.monthReportAmount}}</p>
+
+                <p class="f14 font-bold">本年完成产值（万元）：{{detail.monthContractReport}}</p>
+
+                <p class="f14 font-bold">往年完成产值（万元）：{{detail.agoContractReport}}</p>
+            </div>
+            <!-- 副标题 结束 -->
+            <!-- 工程概况 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectInfoShow()">
+                <p>工程概况</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、工程名称</td>
+                        <td align="right">{{detail.projectName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、工程地点</td>
+                        <td align="right">
+                            {{detail.provinceName}}{{detail.cityName}}{{detail.countyName}}{{detail.detailAddress}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、资金来源</td>
+                        <td align="right">{{detail.fundSourceName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">4、责任人</td>
+                        <td align="right">{{detail.responsiblePersonName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">5、项目经理</td>
+                        <td align="right">{{detail.manager}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">6、工程状态</td>
+                        <td align="right">{{detail.projectStatusName}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 工程概况 结束 -->
+            <!-- 产值详细 开始 -->
+            <div class="item item-divider item-divider-title">
+                <p>产值详细</p>
+            </div>
+            <!-- 每年产值列表 开始 -->
+            <div ng-repeat="reportList in report">
+                <div class="item item-divider item-light item-divider-title item-icon-right font-bold"
+                     ng-init="showReport[$index]=false" ng-click="showReport[$index]=!showReport[$index]">
+                    {{reportList.year}}年产值：<span class="">{{reportList.amount}} 万元</span>
+                    <i class="icon ion-ios-arrow-up"
+                       ng-class="showReport[$index]?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+                </div>
+                <div class="item nopadding-vertical" ng-show="showReport[$index]">
+                    <table class="table-row">
+                        <tbody>
+                        <tr ng-repeat="amountList in reportList.list">
+                            <td width="60%">{{amountList.month}}月完成产值</td>
+                            <td align="right">{{amountList.amount}} 万元</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+    <style type="text/css">
+        .item .table-row tbody tr td:first-child {
+            padding-left: 6px;
+        }
+
+        .item .table-row tbody tr td:last-child {
+            padding-right: 6px;
+        }
+
+        .item-divider-title.item-icon-right .light-icon {
+            color: #fff;
+        }
+    </style>
+</ion-view>

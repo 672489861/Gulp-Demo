@@ -1,0 +1,28 @@
+<ion-view view-title="本地安全检查列表" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <div ng-repeat="check in dailyCheckList">
+            <div class="card margin-top" ng-click="toEdit(check.id)" nav-direction="forward">
+                <div class="item">
+                    <span class="smart-mark calm-bg">已缓存</span>
+                    <p><span class="title">名称：</span>{{check.checkDataShow.checkTypeName}}</p>
+
+                    <p><span class="title">内容：</span>{{check.title}}</p>
+
+                    <p class="nomargin"><span class="title">时间：</span>{{check.checkData.checkDate}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+</ion-view>
+

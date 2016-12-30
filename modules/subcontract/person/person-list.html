@@ -1,0 +1,262 @@
+<ion-view view-title="劳务人员信息" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openQueryMerchant()">
+                <p>
+                    <span>分包单位</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+
+    <ion-content class="has-subhead">
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && personList.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card margin-top" ng-repeat="person in personList">
+            <div class="item has-mark has-avatar-left"
+                 ui-sref="subcontract/person/person-detail({personId: person.personId})">
+                <span ng-class="getClassName({{person.worktypeId}})">{{person.worktypeName}}</span>
+                <img ng-src="{{person.photourl}}"/>
+
+                <p class="has-yt-badge"><span class="title">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>{{person.name}}
+                    <span class="yt-badge badge-lightorange" ng-show="{{person.special==1}}">特</span></p>
+
+                <p><span class="title">所属班组：</span>{{person.teamName}}</p>
+
+                <p class="nomargin"><span class="title">联系方式：</span>{{person.telphone}}</p>
+
+                <p class="nomargin"><span class="title">人员状态：</span>{{person.outTime == null ? "正常工作" : "退场"}}</p>
+            </div>
+        </div>
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <div class="bar bar-footer nopadding">
+        <h4 class="full-width text-center">合计： {{recordCount}} 人</h4>
+    </div>
+
+    <!-- 分包单位列表 -->
+    <script id="query-merchant.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMerchant.hide()">取消</button>
+                <h1 class="title">分包单位列表</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="hideQueryMerchant(-1)" ng-value="-1" ng-model="condition.merchantId">全部
+                    </ion-radio>
+                    <ion-radio ng-repeat="merchant in merchantList" ng-value="{{merchant.id}}"
+                               ng-model="condition.merchantId"
+                               ng-click="hideQueryMerchant({{merchant.id}})">
+                        {{merchant.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template" ng-init="hideForKeybroad=true">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">人员筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearchText()">清空</button>
+            </ion-header-bar>
+            <ion-content class="has-footer">
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">姓名</ion-label>
+                        <input type="text" ng-model="condition.name" placeholder="请输入姓名">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">电话</ion-label>
+                        <input type="text" ng-model="condition.telphone" placeholder="请输入电话">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">身份证号</ion-label>
+                        <input type="text" ng-model="condition.idcard" placeholder="请输入身份证号">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">籍贯</ion-label>
+                        <input type="text" ng-model="condition.nativeplace" placeholder="请输入籍贯">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">年龄</ion-label>
+                        <input type="text" ng-model="condition.age" placeholder="请输入年龄">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openKinds()">
+                        <ion-label class="input-ion-input">工种</ion-label>
+                        <input type="text" placeholder="{{condition.workTypeName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openIsSpecial()">
+                        <ion-label class="input-ion-input">特殊工种</ion-label>
+                        <input type="text" placeholder="{{condition.isspecial}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openGroup()">
+                        <ion-label class="input-ion-input">所属班组</ion-label>
+                        <input type="text" placeholder="{{condition.teamName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link"
+                               ng-click="openInTimeBegin()">
+                        <ion-label class="input-ion-input">进场时间（起）</ion-label>
+                        <input type="text" value="" ng-model="condition.inTimeBegin" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link"
+                               ng-click="openInTimeEnd()">
+                        <ion-label class="input-ion-input">进场时间（止）</ion-label>
+                        <input type="text" placeholder="" value="" ng-model="condition.inTimeEnd" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openOutTimeBegin()">
+                        <ion-label class="input-ion-input">退场时间（起）</ion-label>
+                        <input type="text" placeholder="" value="" ng-model="condition.outTimeBegin" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openOutTimeEnd()">
+                        <ion-label class="input-ion-input">退场时间（止）</ion-label>
+                        <input type="text" placeholder="" value="" ng-model="condition.outTimeEnd" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                </ion-list>
+            </ion-content>
+            <div class="bar bar-footer bar-positive">
+                <div class="title" ng-click="hideQueryMore()">查询</div>
+            </div>
+
+            <div class="yt-action-backdrop" ng-class="isSpecial ? 'active':''"
+                 ng-show="isSpecial" ng-click="close()"></div>
+
+            <div class="yt-action-wrapper-bottom" ng-show="isSpecial" ng-class="isSpecial ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeIsSpecial(-1)" name="special" ng-value="-1"
+                                   ng-model="condition.special">不限
+                        </ion-radio>
+                        <ion-radio ng-click="closeIsSpecial(1)" name="special" ng-value="1"
+                                   ng-model="condition.special">是
+                        </ion-radio>
+                        <ion-radio ng-click="closeIsSpecial(0)" name="special" ng-value="0"
+                                   ng-model="condition.special">否
+                        </ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 工种列表 -->
+    <script id="kinds.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalKinds.hide()">取消</button>
+                <h1 class="title">工种列表</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="hideKinds(-1,'全部')" name="worktypeId" ng-value="-1"
+                               ng-model="condition.worktypeId">全部
+                    </ion-radio>
+                    <ion-radio ng-click="hideKinds({{worktype.id}},'{{worktype.name}}')"
+                               ng-value="{{worktype.id}}" name="worktypeId" ng-model="condition.worktypeId"
+                               ng-repeat="worktype in workTypeList">
+                        {{worktype.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 所属班组 -->
+    <script id="group.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalGroup.hide()">取消</button>
+                <h1 class="title">班组列表</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="hideGroup(-1,'全部')" name="id" ng-value="-1" ng-model="condition.id">全部
+                    </ion-radio>
+                    <ion-radio ng-click="hideGroup({{team.id}},'{{team.name}}')" name="id" ng-value="{{team.id}}"
+                               ng-model="condition.id" ng-repeat="team in teamList">
+                        {{team.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 进场时间（起） -->
+    <script id="inTimeBegin.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="inTimeBegin">
+        </onezone-datepicker>
+    </script>
+    <!-- 进场时间（止） -->
+    <script id="inTimeEnd.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="inTimeEnd">
+        </onezone-datepicker>
+    </script>
+    <!-- 退场时间（起） -->
+    <script id="outTimeBegin.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="outTimeBegin">
+        </onezone-datepicker>
+    </script>
+    <!-- 退场时间（止） -->
+    <script id="outTimeEnd.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="outTimeEnd">
+        </onezone-datepicker>
+    </script>
+
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+
+        .badge-lightorange {
+            background: #f8b551;
+        }
+
+        .has-yt-badge {
+            position: relative;
+        }
+
+        .yt-badge {
+            font-size: 10px;
+            line-height: 12px;
+            padding: 1px 3px;
+            border-radius: 2px;
+            position: absolute;
+            top: 2px;
+            color: white;
+            margin-left: 5px;
+        }
+    </style>
+</ion-view>

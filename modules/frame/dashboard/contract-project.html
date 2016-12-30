@@ -1,0 +1,231 @@
+<ion-content scroll="true">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListDataByC()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <div class="cb-select" ng-click="switchOrgListByC()">
+        <span>{{moduleByC.orgNameByC}}</span>
+        <i class="icon ion-arrow-down-b"></i>
+    </div>
+
+    <ion-list class="cb-list" ng-repeat="info in contractInfo">
+        <!--<ion-item class="b-blue">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>承包合同金额：{{info.contractAmount}}万元，一般纳税</p>
+
+                    <p>其中主合同{{info.mainAmount}}万元</p>
+
+                    <p>补充合同{{info.subAmount}}万元</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p>完成产值累计<span class="orange">{{info.reportAmount}}</span>万元</p>
+
+                <p>业主结算累计<span class="green">10</span>万元</p>
+            </div>
+        </ion-item>-->
+        <ion-item class="b-yellow" ng-show="moduleByC.m60103">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>材料采购合同{{info.materialPurCount}}份</p>
+
+                    <!--<p>一般纳税15份，简易纳税7份</p>-->
+
+                    <p>材料采购合同总金额{{info.materialPurCost / 10000 | number:3}}万元</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p>入库总金额<span class="orange">{{info.materialPurRecAmount / 10000 | number:3}}</span>万元</p>
+
+                <!--<p>退库总金额<span class="red">{{info.materialPurReiAmount / 10000}}</span>万元</p>-->
+
+                <!--<p>累计结算<span class="green">10</span>万元</p>-->
+            </div>
+        </ion-item>
+        <ion-item class="b-green" ng-show="moduleByC.m60104">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>材料租赁合同{{info.materialLeaCount}}份</p>
+
+                    <!--<p>一般纳税15份，简易纳税7份</p>-->
+
+                    <p>材料租赁合同总金额{{info.materialLeaCost / 10000 | number:3}}万元</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p>入库总金额<span class="orange">{{info.materialLeaRecAmount / 10000 | number:3}}</span>万元</p>
+
+                <!--<p>退库总金额<span class="red">{{info.materialLeaReiAmount / 10000}}</span>万元</p>-->
+
+                <!--<p>累计结算<span class="green">10</span>万元</p>-->
+            </div>
+        </ion-item>
+        <ion-item class="b-orange" ng-show="moduleByC.m60102">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>分包合同{{info.subContractCount}}份，合同总金额{{info.subContractCost / 10000 | number:3}}万元</p>
+
+                    <!--<p>一般纳税15份，简易纳税7份</p>-->
+
+                    <p>包清工合同{{info.contractMatCount}}份，合同总金额{{info.contractMatCost / 10000 | number:3}}万元</p>
+
+                    <p>包工包料合同{{info.contractLaborCount}}份，合同金额{{info.contractLaborCost / 10000 | number:3}}万元</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p>现场劳务人数<span class="orange">{{personCount}}</span>人</p>
+
+                <p>现场劳务工资发放累计<span class="green">{{salaryTotal | number:3}}</span>万元</p>
+
+                <p>分包计量累计<span class="orange">{{meterAmount | number:3}}</span>万元</p>
+
+                <p>分包结算累计<span class="green">{{settlementTotal | number:3}}</span>万元</p>
+            </div>
+        </ion-item>
+        <ion-item class="b-lightBlue" ng-show="moduleByC.m60105">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>设备采购合同{{info.devicePurCount}}份</p>
+
+                    <!--<p>一般纳税15份，简易纳税7份</p>-->
+
+                    <p>设备采购合同总金额{{info.devicePurCost / 10000 | number:3}}万元</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p>进场<span class="orange">{{info.devicePurInCount}}</span>台</p>
+
+                <!--<p>累计结算<span class="green">10</span>万元</p>-->
+            </div>
+        </ion-item>
+        <ion-item class="b-red" ng-show="moduleByC.m60106">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>设备租赁合同{{info.deviceLeaCount}}份</p>
+
+                    <!--<p>一般纳税15份，简易纳税2份</p>-->
+
+                    <p>设备租赁合同总金额{{info.deviceLeaCost / 10000 | number:3}}万元</p>
+                </div>
+            </div>
+            <div class="content-box">
+                <p>进场<span class="orange">{{info.deviceLeaInCount}}</span>台</p>
+
+                <!--<p>累计结算<span class="green">10</span>万元</p>-->
+            </div>
+        </ion-item>
+        <ion-item class="b-gray" ng-show="moduleByC.m60107">
+            <div class="left-box">
+                <div class="content-box">
+                    <p>其他合同{{info.otherCount}}份</p>
+
+                    <!--<p>收入合同15份，合同总金额53万元</p>
+
+                    <p>支出合同15份，合同总金额33万元</p>-->
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <!-- 公共背景层 如果有多个弹框共用一个背景层 -->
+    <div class="yt-action-backdrop" ng-class="showOrgListByC ? 'active':''" ng-show="showOrgListByC"
+         ng-click="switchOrgListByC()"></div>
+
+    <!-- 切换组织机构-->
+    <!-- yt-action-wrapper-top 一定要和has-header 组合用，否则缺少top值 -->
+    <div class="yt-action-wrapper-top has-header" ng-show="showOrgListByC" ng-class="showOrgListByC ? 'yt-action-up':''">
+        <div class="yt-action cb-action">
+            <ion-list>
+                <ion-item  ng-repeat="orgByC in moduleByC.orgListByC" ng-click="changeOrgByC(orgByC.id)" nav-direction="enter">{{orgByC.name}}</ion-item>
+            </ion-list>
+        </div>
+    </div>
+</ion-content>
+<style type="text/css">
+    .cb-list .item {
+        margin: 15px;
+        padding: 15px;
+    }
+
+    .cb-list .item.b-blue {
+        border-left: 3px solid #78a3ed;
+    }
+
+    .cb-list .item.b-yellow {
+        border-left: 3px solid #e1e069;
+    }
+
+    .cb-list .item.b-green {
+        border-left: 3px solid #6bddb4;
+    }
+
+    .cb-list .item.b-orange {
+        border-left: 3px solid #fba722;
+    }
+
+    .cb-list .item.b-red {
+        border-left: 3px solid #f87d7d;
+    }
+
+    .cb-list .item.b-lightBlue {
+        border-left: 3px solid #78dbed;
+    }
+
+    .cb-list .item.b-gray {
+        border-left: 3px solid #b3b3b3;
+    }
+
+    .cb-list .orange {
+        color: #fba722
+    }
+
+    .cb-list .red {
+        color: #f87d7d
+    }
+
+    .cb-list .green {
+        color: #6bddb4
+    }
+
+    .cb-list .item .content-box {
+        display: inline-block;
+        width: 39%;
+        padding-left: 10px;
+        vertical-align: middle;
+    }
+
+    .cb-list .left-box {
+        display: inline-block;
+        width: 60%;
+        height: 100%;
+        border-right: 1px solid #f8f8f8;
+    }
+
+    .cb-list .item .left-box .content-box {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .cb-list .item .content-box p {
+        line-height: 20px;
+        font-size: 12px;
+        color: #666;
+        white-space: normal;
+    }
+
+    .cb-select{
+        height: 45px;
+        line-height: 45px;
+        border-bottom:1px solid #f2f2f2;
+        background-color: #fff;
+        text-align: center;
+        position: relative;
+        z-index: 12;
+    }
+
+    .cb-action{
+        max-height: none;
+    }
+</style>

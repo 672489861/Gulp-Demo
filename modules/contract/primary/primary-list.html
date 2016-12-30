@@ -1,0 +1,228 @@
+<ion-view title="总承包合同" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openContractType()">
+                <p>
+                    <span>合同类型</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && primaryList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+
+        <div class="card margin-top has-body-card" ng-repeat="primaryInfo in primaryList">
+            <div class="item" ui-sref="contract/primary/primary-detail({id: primaryInfo.id})">
+                <span class="smart-mark {{primaryInfo.typeId == 1 ? 'positive-bg' : 'assertive-bg'}}">{{primaryInfo.typeId == 1? "补充":"主承包"}}</span>
+                <h2>{{primaryInfo.projectName}}</h2>
+                <div class="card-body">
+                    <p>责任人：{{primaryInfo.responsiblePersonName}}</p>
+                    <p>项目经理：{{primaryInfo.manager}}</p>
+                    <p>资金来源：{{primaryInfo.fundSourceName}}</p>
+                    <p>合同价款：{{primaryInfo.amount}}万元</p>
+                </div>
+                <p>组织机构：{{primaryInfo.orgName}}</p>
+            </div>
+        </div>
+
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+
+    <!-- 合同类型 -->
+    <script id="contract-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideContractType()">取消</button>
+                <h1 class="title">合同类型</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="-1">全部类型</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="2">主承包合同</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="1">补充合同</ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideQueryMore()">取消</button>
+                <h1 class="title">合同筛选</h1>
+                <button class="button button-clear button-primary"
+                        ng-click="clearSearchText();$event.stopPropagation();">清空
+                </button>
+            </ion-header-bar>
+            <ion-content>
+
+                <ion-list class="yt-form">
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">合同编号</ion-label>
+                        <input type="text" placeholder="请输入合同编号" ng-model="condition.displayId">
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">工程名称</ion-label>
+                        <input type="text" placeholder="请输入工程名称" ng-model="condition.projectName">
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openProjectStatus()">
+                        <ion-label class="input-ion-input">工程状态</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.psName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">发包人</ion-label>
+                        <input type="text" placeholder="请输入发包人" ng-model="condition.merchantName">
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openWorkCategory()">
+                        <ion-label class="input-ion-input">工程类别</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.wcName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">责任人</ion-label>
+                        <input type="text" placeholder="请输入责任人" ng-model="condition.responsiblePersonName">
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">项目经理</ion-label>
+                        <input type="text" placeholder="请输入项目经理" ng-model="condition.manager">
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openSignTime()">
+                        <ion-label class="input-ion-input">签订时间</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.signTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openStartTime()">
+                        <ion-label class="input-ion-input">开工时间</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.startTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openEndTime()">
+                        <ion-label class="input-ion-input">竣工时间</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.endTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                </ion-list>
+
+                <div class="item">
+                    <a class="button button-block button-positive" ng-click="searchData()">查询</a>
+                </div>
+            </ion-content>
+
+            <!-- 多个下拉内容，共用一个背景 -->
+            <div class="yt-action-backdrop" ng-class="isProjectStatus || isWorkCategory ? 'active':''"
+                 ng-show="isProjectStatus || isWorkCategory "
+                 ng-click="close()">
+            </div>
+
+            <!-- 工程状态 弹框 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isProjectStatus"
+                 ng-class="isProjectStatus ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeProjectStatus('不限')" ng-model="condition.psid" ng-value="-1">不限
+                        </ion-radio>
+                        <ion-radio ng-click="closeProjectStatus('在建')" ng-model="condition.psid" ng-value="1">在建
+                        </ion-radio>
+                        <ion-radio ng-click="closeProjectStatus('完工')" ng-model="condition.psid" ng-value="2">完工
+                        </ion-radio>
+                        <ion-radio ng-click="closeProjectStatus('竣工')" ng-model="condition.psid" ng-value="3">竣工
+                        </ion-radio>
+                        <ion-radio ng-click="closeProjectStatus('停工')" ng-model="condition.psid" ng-value="4">停工
+                        </ion-radio>
+                        <ion-radio ng-click="closeProjectStatus('取消项目')" ng-model="condition.psid" ng-value="5">取消项目
+                        </ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+
+            <!-- 工程类别 弹框 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isWorkCategory"
+                 ng-class="isWorkCategory ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeWorkCategory('不限')" ng-model="condition.wcid" ng-value="-1">不限
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('房屋建筑工程')" ng-model="condition.wcid" ng-value="1">
+                            房屋建筑工程
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('交通运输工程')" ng-model="condition.wcid" ng-value="2">
+                            交通运输工程
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('电力工程')" ng-model="condition.wcid" ng-value="3">电力工程
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('机电安装')" ng-model="condition.wcid" ng-value="4">机电安装
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('通讯线路')" ng-model="condition.wcid" ng-value="5">通讯线路
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('市政工程')" ng-model="condition.wcid" ng-value="6">市政工程
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('其他工程')" ng-model="condition.wcid" ng-value="7">其他工程
+                        </ion-radio>
+                        <ion-radio ng-click="closeWorkCategory('水利水电工程')" ng-model="condition.wcid" ng-value="8">
+                            水利水电工程
+                        </ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 显示 删选菜单中 签订时间 弹框 -->
+    <script id="sign-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="signTime">
+        </onezone-datepicker>
+    </script>
+    <!-- 显示 删选菜单中 开工时间 弹框 -->
+    <script id="start-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime">
+        </onezone-datepicker>
+    </script>
+    <!-- 显示 删选菜单中 竣工时间 弹框 -->
+    <script id="end-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="endTime">
+        </onezone-datepicker>
+    </script>
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+</ion-view>

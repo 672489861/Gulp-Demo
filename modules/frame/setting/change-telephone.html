@@ -1,0 +1,23 @@
+<ion-view view-title="更改电话">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item" ng-click="$ionicGoBack()" nav-direction="back">
+
+        </button>
+    </ion-nav-buttons>
+    <ion-content class="bg-grey yt-form">
+
+        <div class="content">
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label self-info-txt">电话</span>
+                    <input type="text" placeholder="请输入电话" ng-model="modifyUser.telephone" >
+                </label>
+            </div>
+
+            <div class="padding">
+                <button class="button button-block button-positive" ng-click="updateTelephone()">确认修改</button>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>

@@ -1,0 +1,28 @@
+<ion-view view-title="项目处罚">
+    <ion-content>
+        <div class="list">
+            <div class="item">
+                处罚内容
+                <span class="item-note">{{punish.content}}</span>
+            </div>
+            <div class="item">
+                行政主管机构名称
+                <span class="item-note">{{punish.management}}</span>
+            </div>
+            <div class="item">
+                处罚时间
+                <span class="item-note">{{punish.date}}</span>
+            </div>
+            <div class="item item-icon-right item-link" ng-click="attachmentShow()">
+                附件
+                <i class="icon" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-grid nopadding" ng-show="attachment">
+                <div ng-repeat="attach in attaches" ng-click="download(attach)">
+                    <img src="{{attach.name|showSvg}}">
+                    <p>{{attach.name}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,25 @@
+<ion-view view-title="分包价外费用信息">
+    <div class="bar bar-subheader nopadding">
+        <p class="head-title">分包价外费用总计：{{chargesSum}}元</p>
+    </div>
+    <ion-content class="has-subheader">
+        <ion-list ng-repeat="item in chargesInfo">
+            <ion-item class="margin-bottom">
+                <h2 class="padding-bottom">{{item.name}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td width="50%" height="25"><span class="note">承担方式：</span>{{item.bearName}}</td>
+                    </tr>
+                    <tr>
+                        <td height="25"><span class="note">费用金额（元）：</span>{{item.money}}</td>
+                    </tr>
+                    <tr>
+                        <td height="25"><span class="note">备注：</span>{{item.memo}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

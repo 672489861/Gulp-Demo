@@ -1,0 +1,22 @@
+<ion-view view-title="{{contractName}}">
+    <ion-content>
+        <div class="empty-info" ng-if="measureTeamDetails.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有相关数据！</p>
+        </div>
+        <ion-list>
+            <ion-item class="margin-bottom" ng-repeat="team in measureTeamDetails">
+                <h2 class="padding-bottom">{{team.teamName}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td width="50%" height="25"><span class="note">合同内金额：</span>{{team.withinAmount}} 元</td>
+                        <td height="25"><span class="note">合同外金额：</span>{{team.withoutAmount}} 元</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

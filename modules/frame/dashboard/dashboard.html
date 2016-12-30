@@ -1,0 +1,44 @@
+<ion-view view-title="消息">
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-android-add" id="add" ng-click="goSubscribeModule()"></button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" scroll="false">
+        <!-- 集团分公司身份 关注了企业管理 关注了项目管理  -->
+        <ion-slide-box class="parent-slider" slide-tabs-scrollable="false" show-pager="false"
+                       delegate-handle="delegate-handle" ng-if="slideBoxTemp == 1"  ion-slide-tabs>
+
+            <ion-slide ng-repeat="module in tempModules" ion-slide-tab-label="{{module.moduleName}}"
+                       slide-go="{{module.url}}">
+                <ng-include src="getUrl(module)" ng-if="$index == 0"></ng-include>
+            </ion-slide>
+
+        </ion-slide-box>
+
+        <!-- 集团分公司身份 关注了企业管理 但是没有关注 项目管理  -->
+        <ion-slide-box class="parent-slider" slide-tabs-scrollable="true" show-pager="false"
+                       delegate-handle="delegate-handle" ng-if="slideBoxTemp == 2 || slideBoxTemp == 4" ion-slide-tabs>
+
+            <ion-slide ng-repeat="module in selectedModules"
+                       ion-slide-tab-label="{{module.shortName}}"
+                       slide-changed="{{module.moduleId}},{{module.moduleName}},{{module.shortName}}">
+                <ng-include src="getUrl(module)"></ng-include>
+            </ion-slide>
+
+        </ion-slide-box>
+
+        <!-- 集团分公司身份 没有关注企业管理 但是关注 项目管理  -->
+
+
+        <!-- 项目部身份 -->
+        <ion-slide-box class="parent-slider" slide-tabs-scrollable="true" show-pager="false"
+                       delegate-handle="delegate-handle" ng-if="slideBoxTemp == 3" ion-slide-tabs>
+
+            <ion-slide ng-repeat="module in selectedModules"
+                       ion-slide-tab-label="{{module.shortName}}"
+                       slide-changed="{{module.moduleId}},{{module.moduleName}},{{module.shortName}}">
+                <ng-include src="getUrl(module)"></ng-include>
+            </ion-slide>
+        </ion-slide-box>
+    </ion-content>
+</ion-view>

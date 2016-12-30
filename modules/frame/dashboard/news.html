@@ -1,0 +1,33 @@
+<ion-content scroll="true" delegate-handle="mainScroll">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <div ng-repeat="new in news">
+        <p class="rj-message-time" ng-click="goDetail()">{{new.pushTime}}</p>
+
+        <div class="rj-message-wrap" ng-repeat="detail in new.details" id="{{detail.id}}">
+            <img ng-src="{{detail.imgSrc}}" class="rj-head-pic">
+            <span class="rj-triangle-left"></span>
+
+            <div class="rj-message" style="min-width: 80%;"  ng-show="detail.type!=1" >
+                <p compile="detail.content">
+
+                </p>
+                <p style="text-align: right;" ng-show="detail.orgId!=0">一{{detail.orgName}}</p>
+            </div>
+
+            <div class="rj-message" ng-show="detail.type==1">
+                <p class="title" style="font-weight: bold; margin-bottom: 0px;">{{detail.title}}</p>
+                {{detail.content}}
+                <p style="text-align: right;">一{{detail.orgName}}</p>
+            </div>
+        </div>
+    </div>
+    <!-- 滚动加载 -->
+    <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+
+    <link href="modules/frame/dashboard/css/news.css" rel="stylesheet">
+</ion-content>
+

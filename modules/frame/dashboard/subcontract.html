@@ -1,0 +1,49 @@
+<link href="modules/frame/dashboard/css/table.css" rel="stylesheet">
+
+<ion-content scroll="true" class="table">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListDataBySubContract()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <div class="cb-select" ng-click="switchOrgListByM()">
+        <span>{{moduleBySubContract.orgNameBySubContract}}</span>
+        <i class="icon ion-arrow-down-b"></i>
+    </div>
+
+    <p class="memo">分包队伍{{teamCount}}个，劳务人数{{personCount}}人，工资发放合计{{salaryTotal}}万元，累计结算{{settlementTotal}}万元</p>
+
+    <ion-list class="ca-list">
+        <ion-item ng-init="item.selected=false" ng-repeat="team in teamList">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">{{team.name}} 劳务人数合计{{team.personCount}}人，当前有效人数{{team.personEffectiveCount}}人</p>
+
+                <div class="arrow-box arrow-blue">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected ">
+                <p>累计工资发放{{team.realSalary}}万元</p>
+
+                <p>累计分包计量{{team.measureAmount}}万元</p>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <!-- 公共背景层 如果有多个弹框共用一个背景层 -->
+    <div class="yt-action-backdrop" ng-class="showOrgListByM ? 'active':''" ng-show="showOrgListByM"
+         ng-click="switchOrgListBySubContract()"></div>
+
+    <div class="yt-action-wrapper-top has-header" ng-show="showOrgListByM"
+         ng-class="showOrgListByM ? 'yt-action-up':''">
+        <div class="yt-action cb-action">
+            <ion-list>
+                <ion-item ng-repeat="orgBySubContract in moduleBySubContract.orgListBySubContract"
+                          ng-click="changeOrgBySubContract(orgBySubContract.id,orgBySubContract.name)"
+                          nav-direction="enter">{{orgBySubContract.name}}
+                </ion-item>
+            </ion-list>
+        </div>
+    </div>
+
+</ion-content>

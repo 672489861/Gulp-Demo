@@ -1,0 +1,138 @@
+<ion-view view-title="材料租赁合同">
+    <ion-content>
+        <!-- 标题 开始 -->
+        <h3 class="page-detail-title font-bold text-center">建设工程材料租赁合同</h3>
+        <p class="nomargin text-center padding-bottom light-bg">合同编号：{{leaseInfo.displayId}}</p>
+        <!-- 标题 结束 -->
+        <div class="list">
+            <!-- 副标题 开始 -->
+            <div class="item item-title">
+                <p class="f14 font-bold">租用单位：{{leaseInfo.hireName}}</p>
+                <p class="f14 font-bold">出租单位：{{leaseInfo.rentName}}</p>
+            </div>
+            <!-- 副标题 结束 -->
+            <!-- 工程概况 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectInfoShow()">
+                <p>工程概况</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、工程名称</td>
+                        <td align="right" class="text-left">{{leaseInfo.projectName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、工程地点</td>
+                        <td align="right" class="text-left">{{leaseInfo.orgAddress}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 工程概况 结束 -->
+            <!-- 租赁详细信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="leaseDetailShow()">
+                <p>租赁详细信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="leaseDetail?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="leaseDetail">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、开始时间</td>
+                        <td align="right">{{leaseInfo.beginDate}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、结束时间</td>
+                        <td align="right">{{leaseInfo.endDate}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、总日历天数</td>
+                        <td align="right">{{totalDays}}天</td>
+                    </tr>
+                    <tr ui-sref="contract/material/lease/material-lease-material-info">
+                        <td>4、材料信息</td>
+                        <td align="right" class="link">{{materialLength}}条<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ui-sref="contract/material/lease/material-lease-charges-info">
+                        <td width="50%">5、租赁价外费用信息</td>
+                        <td align="right" class="link">{{chargesLength}}条<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 租赁详细信息 结束 -->
+            <!-- 材料质量标准 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="workmoneyShow()">
+                <p>材料结算及付款</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workmoney?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="workmoney">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="25%">1、结算方式</td>
+                        <td align="right" class="text-left">{{leaseInfo.settlement}}</td>
+                    </tr>
+                    <tr>
+                        <td>2、付款方式</td>
+                        <td align="right" class="text-left">{{leaseInfo.modeOfPayment}}</td>
+                    </tr>
+                    <tr>
+                        <td>3、合同价款</td>
+                        <td align="right">{{leaseInfo.cost | currency:'￥'}}（{{leaseInfo.hasTax == 1 ? '含税' : '不含税'}}）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 21px">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;写</td>
+                        <td align="right">{{formatMoney}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="billShow()">
+                <p>税务发票约定</p>
+                <i class="icon ion-ios-arrow-up" ng-class="bill?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="bill">
+                <table class="table-row">
+                    <tbody>
+                    <tr ui-sref="contract/material/lease/material-lease-invoice-info">
+                        <td>1、税务发票约定</td>
+                        <td align="right" class="link">{{invoiceLength}}条<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 税务发票约定 结束 -->
+            <!-- 其他约定 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="remarkShow()">
+                <p>其他约定</p>
+                <i class="icon ion-ios-arrow-up" ng-class="remark?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="remark">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td colspan="2" ng-bind-html="memo"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 其他约定 结束 -->
+            <!-- 附件信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="attachmentShow()">
+                <p>附件信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-light item-grid nopadding" style="margin-top: 1px" ng-show="attachment">
+                <div ng-repeat="item in attachInfo" ng-click="downloadAttach(item)">
+                    <img src="{{item.name | showAttachIcon}}">
+                    <p>{{item.name}}<br/>({{item.fileSize}})</p>
+                </div>
+            </div>
+            <!-- 附件信息 结束 -->
+        </div>
+    </ion-content>
+</ion-view>

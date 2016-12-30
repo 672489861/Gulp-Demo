@@ -1,0 +1,12 @@
+<ion-view view-title="学历证书附件">
+    <ion-content>
+        <div class="list">
+            <div class="item item-grid nopadding">
+                <div ng-repeat="attach in attaches" ng-click="download(attach)">
+                    <img src="{{attach.name|showAttachIcon}}">
+                    <p>{{attach.name}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

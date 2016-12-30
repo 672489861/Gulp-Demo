@@ -1,0 +1,68 @@
+.choose .scroll-content {
+    background-color: #fff;
+    overflow: auto;
+}
+
+.choose h4 {
+    margin: 0;
+    padding: 0 0 0 15px;
+    border-bottom:2px solid #7babfc;
+    background-color: #f7f7f7;
+    line-height: 40px;
+    font-family: "Microsoft YaHei";
+    font-size: 16px;
+    color: #999;
+}
+
+.choose .col, .row {
+    padding: 0;
+}
+
+.choose .row + .row {
+    margin: 0;
+}
+
+.choose .bar-footer .button {
+    padding: 0;
+    width: 48%;
+}
+
+.choose label {
+    border-width: 0;
+}
+
+.choose .sub-title {
+    overflow: hidden;
+    /*border-top: 4px solid #f7f7f7;*/
+}
+
+.choose .item {
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.choose .sub-title .arrow-down {
+    float: right;
+    margin-right: 30px;
+    line-height: 47px;
+    color: #ccc;
+}
+
+.choose .sub-title .item {
+    /*background-color:#e5e5e5 ;*/
+}
+
+.choose .sub-title span {
+    font-family: "Microsoft YaHei";
+    color: #387ef5;
+}
+
+.choose .choose-content {
+    padding-bottom: 5px;
+    border-top: 1px dashed #c1dbef;
+    overflow: hidden;
+}
+
+.choose .choose-wrap{
+    border-bottom: 4px solid #f7f7f7;
+}

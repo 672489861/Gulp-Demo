@@ -1,0 +1,121 @@
+<ion-view view-title="薪资统筹详细">
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="baseInfo = true;"
+                 ng-click="baseInfo=!baseInfo">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="baseInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="baseInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%" class="has-photo" rowspan="5">
+                            <img ng-src="{{personDetail.photourl}}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.name}}</td>
+                    </tr>
+                    <tr>
+                        <td align="">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.sex
+                            == 0 ?"男":"女"}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="">民&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;族： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.minority}}</td>
+                    </tr>
+                    <tr>
+                        <td align="">出生日期： &nbsp;&nbsp;&nbsp;&nbsp;{{personDetail.birthday}}</td>
+                    </tr>
+                    <tr>
+                        <td>人员编号</td>
+                        <td align="right">{{personDetail.number}}</td>
+                    </tr>
+                    <tr>
+                        <td>身份证号</td>
+                        <td align="right">{{personDetail.idcard}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{personDetail.telphone}}</td>
+                    </tr>
+                    <tr>
+                        <td>文化程度</td>
+                        <td align="right">{{personDetail.education}}</td>
+                    </tr>
+                    <tr>
+                        <td>籍贯</td>
+                        <td align="right">{{personDetail.nativeplace}}</td>
+                    </tr>
+                    <tr>
+                        <td>住址</td>
+                        <td align="right">{{personDetail.address}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="workInfo = true;"
+                 ng-click="workInfo=!workInfo">
+                <p>工资发放历史记录</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item " ng-show="workInfo" ng-repeat="salaryDetail in salaryDetails">
+                <h2 class="padding-bottom-small">{{salaryDetail.recordYear}}年{{salaryDetail.recordMonth}}月薪酬</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td><span class="note">本月工资总计：</span>{{salaryDetail.monthSalary}} 元</td>
+                        <td height="25"><span class="note">出勤工日：</span>{{salaryDetail.workDays}}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="note">出勤工时：</span>{{salaryDetail.workHours}}</td>
+                        <td height="25"><span class="note">实际工资：</span>{{salaryDetail.realSalary}} 元</td>
+                    </tr>
+                    <tr>
+                        <td><span class="note">实际出勤工日：</span>{{salaryDetail.realWorkDays}}</td>
+                        <td height="25"><span class="note">实际出勤工时：</span>{{salaryDetail.realWorkHours}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ion-content>
+
+    <style type="text/css">
+        .has-photo {
+            text-align: left;
+            vertical-align: bottom;
+            padding: 0 !important;
+        }
+
+        .has-photo img {
+            max-width: 95%;
+            height: 130px;
+        }
+
+        .head-title {
+            margin: 0;
+            padding: 0;
+            height: 44px;
+            line-height: 44px;
+            font-size: 16px;
+            padding-left: 10px;
+            font-weight: bold;
+        }
+
+        .table-detail {
+            width: 100%;
+        }
+
+        .table-detail tbody tr td {
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .note {
+            color: #aaa;
+        }
+    </style>
+</ion-view>
+

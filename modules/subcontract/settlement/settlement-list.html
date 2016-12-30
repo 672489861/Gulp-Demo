@@ -1,0 +1,161 @@
+<ion-view view-title="分包结算" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openQueryContract()">
+                <p>
+                    <span>分包合同</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+
+    <ion-content>
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && settlementList.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card margin-top" ui-sref="subcontract/settlement/settlement-detail({settlementId: settlement.id})"
+             ng-repeat="settlement in settlementList">
+            <div class="item has-mark">
+
+                <p><span class="title">结算日期：</span>{{settlement.settlementDate}}</p>
+
+                <p><span class="title">分包单位：</span>{{settlement.merchantName}}</p>
+
+                <p><span class="title">分包合同：</span>{{settlement.displayId}}</p>
+
+                <p><span class="title">本次结算金额：</span>{{settlement.subcontractCumulativeAmount}} 元</p>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+
+    <div class="bar bar-footer nopadding">
+        <h4 class="full-width text-center">累计结算： {{total}} 元</h4>
+    </div>
+
+    <!-- 客商类型 -->
+    <script id="query-contract.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryContract.hide()">取消</button>
+                <h1 class="title">分包合同列表</h1>
+            </ion-header-bar>
+            <div class="bar bar-subheader item-input-inset bar-stable">
+                <label class="item-input-wrapper light-bg">
+                    <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+                    <input type="search" placeholder="请输入合同名称" ng-focus="entering = true" ng-blur="entering = false"
+                           ng-model="searchText">
+                    <i class="icon ion-ios-close placeholder-icon" ng-show="entering"></i>
+                </label>
+            </div>
+            <ion-content class="has-subheader">
+                <ion-list>
+                    <ion-radio ng-click="hideQueryContract(-1)" ng-value="-1" ng-model="condition.contractId">全部
+                    </ion-radio>
+                    <ion-radio ng-repeat="contract in contractList" ng-value="{{contract.id}}"
+                               ng-model="condition.contractId"
+                               ng-click="hideQueryContract({{contract.id}})">{{contract.displayId}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">分包结算筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearchText()">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openMerchant()">
+                        <ion-label class="input-ion-input">分包单位</ion-label>
+                        <input type="text" placeholder="{{condition.merchantName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link"
+                               ng-click="openInTimeBegin()">
+                        <ion-label class="input-ion-input">结算时间（起）</ion-label>
+                        <input type="text" value="" ng-model="condition.settlementTimeBegin" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link"
+                               ng-click="openInTimeEnd()">
+                        <ion-label class="input-ion-input">结算时间（止）</ion-label>
+                        <input type="text" value="" ng-model="condition.settlementTimeEnd" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                </ion-list>
+                <div class="item">
+                    <a class="button button-block button-positive" ng-click="hideQueryMore()">查询</a>
+                </div>
+            </ion-content>
+        </div>
+    </script>
+
+    <script id="merchant.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalMerchant.hide()">取消</button>
+                <h1 class="title">分包单位列表</h1>
+            </ion-header-bar>
+            <ion-header-bar class="bar-subheader item-input-inset bar-stable">
+                <label class="item-input-wrapper light-bg">
+                    <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+                    <input type="search" placeholder="请输入单位名称" ng-focus="entering = true" ng-blur="entering = false"
+                           ng-model="searchText">
+                </label>
+                <i class="icon ion-ios-close placeholder-icon clear-search" ng-show="entering"></i>
+            </ion-header-bar>
+            <ion-content class="has-subheader">
+                <ion-list>
+                    <ion-radio ng-click="hideMerchant(-1,'不限')" ng-value="-1" ng-model="condition.merchantId">不限
+                    </ion-radio>
+                    <ion-radio ng-click="hideMerchant({{merchant.id}},'{{merchant.name}}')" ng-value="{{merchant.id}}"
+                               ng-model="condition.merchantId" ng-repeat="merchant in merchantList">{{merchant.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 进场时间（起） -->
+    <script id="settlementTimeBegin.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="settlementTimeBegin">
+        </onezone-datepicker>
+    </script>
+    <!-- 进场时间（止） -->
+    <script id="settlementTimeEnd.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="settlementTimeEnd">
+        </onezone-datepicker>
+    </script>
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+
+</ion-view>

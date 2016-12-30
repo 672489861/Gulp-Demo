@@ -1,0 +1,123 @@
+<ion-view view-title="其他合同">
+    <ion-content>
+        <!-- 标题 开始 -->
+        <h3 class="page-detail-title font-bold text-center">{{otherInfo.projectName}}</h3>
+        <p class="nomargin text-center padding-bottom light-bg">合同编号：{{otherInfo.displayId}}</p>
+        <!-- 标题 结束 -->
+        <div class="list">
+            <!-- 标题 开始 -->
+            <div class="item item-title">
+                <p class="f14 font-bold">甲方：{{otherInfo.firstPartyName}}</p>
+                <p class="f14 font-bold">乙方：{{otherInfo.secondPartyName}}</p>
+            </div>
+            <!-- 标题 结束 -->
+            <!-- 工程概况 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectInfoShow()">
+                <p>工程概况</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、工程名称</td>
+                        <td align="right">{{otherInfo.projectName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、工程地点</td>
+                        <td align="right">{{otherInfo.orgAddress}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 工程概况 结束 -->
+            <!-- 合同内容 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="contractContentShow()">
+                <p>合同内容</p>
+                <i class="icon ion-ios-arrow-up" ng-class="contractContent?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="contractContent">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td colspan="2" ng-bind-html="content"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 合同内容 结束 -->
+            <!-- 结算方式及付款 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="workmoneyShow()">
+                <p>结算方式及付款</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workmoney?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="workmoney">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、结算方式</td>
+                        <td align="right">{{otherInfo.settlement}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、付款方式</td>
+                        <td align="right">{{otherInfo.modeOfPayment}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、合同价款</td>
+                        <td align="right">{{otherInfo.cost | currency:'￥'}}（{{otherInfo.hasTax == 1 ? '含税' : '不含税'}}）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="35%" style="padding-left: 21px">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;写</td>
+                        <td align="right">{{formatMoney}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 结算方式及付款 结束 -->
+            <!-- 税务发票约定 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="billShow()">
+                <p>税务发票约定</p>
+                <i class="icon ion-ios-arrow-up" ng-class="bill?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="bill">
+                <table class="table-row">
+                    <tbody>
+                    <tr ui-sref="contract/other/invoice-info">
+                        <td>1、税务发票约定</td>
+                        <td align="right" class="link">{{invoiceLength}}条<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 税务发票约定 结束 -->
+            <!-- 其他约定 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="remarkShow()">
+                <p>其他约定</p>
+                <i class="icon ion-ios-arrow-up" ng-class="remark?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="remark">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td colspan="2" ng-bind-html="memo"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 其他约定 结束 -->
+            <!-- 附件信息 开始 -->
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="attachmentShow()">
+                <p>附件信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-light item-grid nopadding" style="margin-top: 1px" ng-show="attachment">
+                <div ng-repeat="item in attachInfo" ng-click="downloadAttach(item)">
+                    <img src="{{item.name | showAttachIcon}}">
+                    <p>{{item.name}}<br/>({{item.fileSize}})</p>
+                </div>
+            </div>
+            <!-- 附件信息 结束 -->
+        </div>
+    </ion-content>
+</ion-view>

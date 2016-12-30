@@ -1,0 +1,34 @@
+<ion-view view-title="故障分析及处理">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" nav-direction="back" ng-click="openBreakdownDeal()">
+            新增
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+
+        <ion-list>
+
+            <ion-radio ng-repeat="item in breakdownDeal" item="item" ng-model="condition.breakdownId" ng-value="{{item.id}}"
+                      ng-click="chooseBreakDown(item)" class="item-remove-animate item-text-wrap">
+                {{ item.name }}
+            </ion-radio>
+
+        </ion-list>
+    </ion-content>
+
+
+    <!-- 新增故障分析及处理 -->
+    <script id="breakdown-deal.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideBreakdownDeal()">取消</button>
+                <h1 class="title">新增故障分析及处理</h1>
+                <button class="button button-clear button-primary" ng-click="addBreakdownDeal()">确定</button>
+            </ion-header-bar>
+            <ion-content>
+                <textarea ng-model="condition.name"></textarea>
+            </ion-content>
+        </div>
+    </script>
+
+</ion-view>

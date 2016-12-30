@@ -1,0 +1,66 @@
+<ion-content scroll="true" class="table" ng-controller="ResponserController">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <p class="memo">新签合同额累计{{basis.newSignAmount}}万元，结转合同额累计{{basis.lastAmout}}万元，在建工程合同额累计{{basis.amount}}万元</p>
+
+    <div class="select-wrap">
+        <div class="center">
+            <div class="item-select year">
+                <select ng-model="nowYear" ng-change="showDetailByYear()">
+                    <option ng-repeat="yearObj in yearList" value="{{yearObj.year}}">{{yearObj.year}}</option>
+                </select>
+            </div>
+            <span>年</span>
+            <div class="item-select type">
+                <select ng-model="statisticType" ng-init="statisticType='1'"
+                        ng-change="showDetailByType()">
+                    <option value="1">按分公司统计</option>
+                    <option value="2">内部经营协议签订情况</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-list">
+        <table class="table col-5"ng-show="statisticType==1">
+            <tr>
+                <th width="35%" class="blue">公司名称</th>
+                <th class="yellow">有效</th>
+                <th class="green">新近</th>
+                <th class="orange">保留</th>
+                <th class="red">退出</th>
+            </tr>
+            <tr ng-repeat="responser in responserList">
+                <td><p class="company">{{responser.name}}</p></td>
+                <td>{{responser.newJoin + responser.retain}}</td>
+                <td>{{responser.newJoin}}</td>
+                <td>{{responser.retain}}</td>
+                <td>{{responser.quit}}</td>
+            </tr>
+            <tr ng-show="responserList.length==0">
+                <td colspan="5" style="text-align: center;">暂无数据</p></td>
+            </tr>
+        </table>
+        <table class="table col-3" ng-show="statisticType==2">
+            <tr>
+                <th width="35%" class="blue">公司名称</th>
+                <th class="orange">有效责任人</th>
+                <th class="green">签订人数</th>
+            </tr>
+            <tr ng-repeat="responser in responserList">
+                <td><p class="company">{{responser.orgName}}</p></td>
+                <td>{{responser.response}}</td>
+                <td>{{responser.sign}}</td>
+            </tr>
+            <tr ng-show="responserList.length==0">
+                <td colspan="3" style="text-align: center;">暂无数据</p></td>
+            </tr>
+        </table>
+    </div>
+
+    <link href="modules/frame/dashboard/css/table.css" rel="stylesheet">
+
+</ion-content>

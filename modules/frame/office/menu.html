@@ -1,0 +1,25 @@
+<ion-view view-title="{{menu.data.name}}" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="goBack()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <div class="list second-list" ng-repeat="subMenu in menu.getChildren()">
+            <div class="item item-divider">
+                {{subMenu.data.name}}
+            </div>
+            <!--为总承包合同在项目部直接跳详细页做处理-->
+            <a class="item item-icon-left item-icon-right item-link" ng-click="goContractDetail()" ng-repeat="thirdMenu in subMenu.getChildren()" ng-if="thirdMenu.data.url=='contract/primary/primary-list'">
+                <img class="icon" ng-src="{{thirdMenu.data.icon}}">
+                <h2>{{thirdMenu.data.name}}</h2>
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+            <a class="item item-icon-left item-icon-right item-link" ui-sref="{{thirdMenu.data.url}}" ng-repeat="thirdMenu in subMenu.getChildren()" ng-if="thirdMenu.data.url!='contract/primary/primary-list'">
+                <img class="icon" ng-src="{{thirdMenu.data.icon}}">
+                <h2>{{thirdMenu.data.name}}</h2>
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

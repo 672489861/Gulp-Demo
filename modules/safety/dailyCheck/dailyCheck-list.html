@@ -1,0 +1,187 @@
+<ion-view view-title="安全检查" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-upload" nav-direction="back"
+                ng-click="toDraftsList()" ng-if="showDrafts">
+            <span style="display: inline-block;position: absolute;background: red;color: white;font-size: 10px;
+            width: 18px;height: 18px;line-height: 18px;border-radius: 50%;top: 0;right: 0;">{{localDataLength}}</span>
+        </button>
+        <button class="button button-icon ion-upload" style="opacity: 0;" ng-if="!showDrafts">
+        </button>
+    </ion-nav-buttons>
+
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openQueryType()">
+                <p>
+                    <span>检查状态</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && purchaseList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+        <div ng-repeat="item in dailyCheckList">
+            <div class="card margin-top" ng-click="toDetail(item.id,item.checkerId,item.solverId,item.nodeName)" nav-direction="forward">
+                <div class="item">
+
+                    <span class="smart-mark royal-bg" ng-if="item.nodeName == '处理人审核'">待处理</span>
+                    <span class="smart-mark balanced-bg" ng-if="item.nodeName == '审批通过'">已通过</span>
+                    <span class="smart-mark energized-bg" ng-if="item.nodeName == '复查人审核'">待复查</span>
+                    <span class="smart-mark calm-bg" ng-if="item.nodeName == '草稿箱'">已保存</span>
+                    <span class="smart-mark assertive-bg" ng-if="item.nodeName == '审批不通过'">未通过</span>
+                    <p><span class="title">名称：</span>{{item.checkTypeName}}</p>
+
+                    <p><span class="title">内容：</span>{{item.title}}</p>
+
+                    <p class="nomargin"><span class="title">时间：</span>{{item.checkDate}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 固定位置 添加按钮 -->
+    <button class="button button-fab button-fab-bottom-right button-positive spin"
+            ng-class="right.checker ? 'on':''"
+            ng-click="toAdd()">
+        <i class="icon ion-plus"></i>
+    </button>
+
+    <!-- 检查类型选择 -->
+    <script id="query-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryType.hide()">取消</button>
+                <h1 class="title">类型选择</h1>
+                <!--<button class="button button-clear button-primary">确定</button>-->
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="-1">不限</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="0">已保存</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="1">待处理</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="2">待复查</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="3">已通过</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="4">未通过</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.typeId" ng-value="5">我提交的</ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 高级删选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">高级筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearchText();$event.stopPropagation();">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">检查人员</ion-label>
+                        <input type="text" placeholder="请输入检查人员" ng-model="condition.checker">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openCheckType()">
+                        <ion-label class="input-ion-input">检查类型</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.checkTypeName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openProblem()">
+                        <ion-label class="input-ion-input">存在问题</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.hasProblemName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openStartTime()">
+                        <ion-label class="input-ion-input">开始时间</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.startTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openEndTime()">
+                        <ion-label class="input-ion-input">结束时间</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.endTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">处理人员</ion-label>
+                        <input type="text" placeholder="请输入处理人员" ng-model="condition.solver">
+                    </ion-input>
+                    <div class="item">
+                        <a class="button button-block button-positive" ng-click="searchData()">查询</a>
+                    </div>
+                </ion-list>
+            </ion-content>
+
+            <!-- 多个下拉内容，共用一个背景 -->
+            <div class="yt-action-backdrop" ng-class="isCheckType || isProblem ? 'active':''"
+                 ng-show="isCheckType || isProblem"
+                 ng-click="close()"></div>
+
+            <!-- 检查类型 弹框 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isCheckType" ng-class="isCheckType ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeCheckType('不限')" ng-model="condition.checkType" ng-value="-1">不限</ion-radio>
+                        <ion-radio ng-click="closeCheckType('日常检查')" ng-model="condition.checkType" ng-value="1">日常检查</ion-radio>
+                        <ion-radio ng-click="closeCheckType('专项检查')" ng-model="condition.checkType" ng-value="2">专项检查</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+
+            <!-- 是否存在问题 弹框 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isProblem" ng-class="isProblem ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeProblem('不限')" ng-model="condition.problem" ng-value="-1">不限</ion-radio>
+                        <ion-radio ng-click="closeProblem('是')" ng-model="condition.problem" ng-value="1">是</ion-radio>
+                        <ion-radio ng-click="closeProblem('否')" ng-model="condition.problem" ng-value="0">否</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+
+        </div>
+    </script>
+    <!-- 显示 删选菜单中 开始时间 弹框 -->
+    <script id="start-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime">
+        </onezone-datepicker>
+    </script>
+    <!-- 显示 删选菜单中 结束时间 弹框 -->
+    <script id="end-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="endTime">
+        </onezone-datepicker>
+    </script>
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+</ion-view>
+

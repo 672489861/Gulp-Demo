@@ -1,0 +1,11 @@
+<ion-view view-title="资料类型">
+    <ion-content>
+        <div class="list">
+            <div class="item item-icon-right item-link" ng-repeat="sub in subs" ng-click="viewDetail(sub)">
+                {{sub.name}}
+                <span class="item-note">{{sub.number}}张</span>
+                <i class="icon ion-ios-arrow-right"></i>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

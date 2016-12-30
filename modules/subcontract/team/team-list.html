@@ -1,0 +1,104 @@
+<ion-view view-title="班组信息" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openQueryMerchant()">
+                <p>
+                    <span>分包单位</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+
+    <ion-content>
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && teamList.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card margin-top" ng-repeat="team in teamList">
+            <div class="item has-mark" ui-sref="subcontract/team/team-detail({id: team.id})">
+                <span ng-class="getClassName(team.worktypeId)">{{team.worktypeName}}</span>
+
+                <p><span class="title">班组名称：</span>{{team.name}}</p>
+
+                <p><span class="title">组长姓名：</span>{{team.leaderName}}</p>
+
+                <p class="nomargin"><span class="title">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：</span>{{team.count}}
+                </p>
+
+                <p class="nomargin"><span class="title">分配金额：</span>{{team.contentTotal}} 元</p>
+
+                <p class="nomargin"><span class="title">计量金额：</span>{{team.completeAmount}} 元</p>
+            </div>
+        </div>
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 分包单位列表 -->
+    <script id="query-merchant.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMerchant.hide()">取消</button>
+                <h1 class="title">分包单位列表</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="hideQueryMerchant(-1)" ng-value="-1" ng-model="condition.merchantId">全部
+                    </ion-radio>
+                    <ion-radio ng-repeat="merchant in merchantList | filter: searchFilter" ng-value="{{merchant.id}}"
+                               ng-model="condition.merchantId" ng-click="hideQueryMerchant({{merchant.id}})">
+                        {{merchant.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template" ng-init="hideForKeybroad=true">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">人员筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearCondition()">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">班组名称</ion-label>
+                        <input type="text" ng-model="condition.name" placeholder="请输入班组名称">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">班组编号</ion-label>
+                        <input type="text" ng-model="condition.number" placeholder="请输入班组编号">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">组长姓名</ion-label>
+                        <input type="text" ng-model="condition.leaderName" placeholder="请输入组长姓名">
+                    </ion-input>
+                </ion-list>
+                <div class="item">
+                    <a class="button button-block button-positive" ng-click="hideQueryMore()">查询</a>
+                </div>
+            </ion-content>
+        </div>
+    </script>
+</ion-view>

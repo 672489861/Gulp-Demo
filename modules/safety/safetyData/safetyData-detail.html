@@ -1,0 +1,16 @@
+<ion-view view-title="资料详细">
+    <ion-content>
+        <div class="list" ng-repeat="data in safetyData">
+            <div class="item item-icon-right item-link" ng-init="attachment[$index]=true" ng-click="attachment[$index]=!attachment[$index]">
+                {{data[0].uploadTime}}
+                <i class="icon" ng-class="attachment[$index]?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-grid nopadding" ng-show="attachment[$index]">
+                <div ng-repeat="attach in data" ng-click="download(attach)">
+                    <img src="{{attach.fileName|showAttachIcon}}">
+                    <p>{{attach.fileName}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

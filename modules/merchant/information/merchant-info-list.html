@@ -1,0 +1,132 @@
+<ion-view view-title="客商信息" hide-back-button="true">
+    <!--返回按钮 重置数据-->
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openQueryTypeUp()">
+                <p>
+                    <span>客商类型</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && merchantList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+        <!-- 客商列表 -->
+        <!-- 角标： 老证书 royal-bg -->
+        <!-- 角标： 三合一 calm-bg -->
+        <div class="card margin-top" ng-repeat="merchantInfo in merchantList">
+            <div class="item has-mark" ui-sref="merchant/information/merchant-info-detail({id: merchantInfo.id})">
+                <span class="smart-mark" ng-class="merchantInfo.kindId == 1 ? 'royal-bg':'calm-bg'">{{merchantInfo.kindId == 1 ? '老证书':'三合一'}}</span>
+                <p><span class="title">客商编号：</span>{{merchantInfo.number}}</p>
+                <p><span class="title">客商名称：</span>{{merchantInfo.name}}</p>
+            </div>
+        </div>
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 客商类型modal 开始 -->
+    <script id="query-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideQueryType()">取消</button>
+                <h1 class="title">客商类型</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-value="0">不限</ion-radio>
+                    <!--<ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-value="1">建设单位</ion-radio>-->
+                    <!--<ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-value="2">分包单位</ion-radio>-->
+                    <!--<ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-value="3">材料供应商</ion-radio>-->
+                    <!--<ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-value="4">设备供应商</ion-radio>-->
+                    <!--<ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-value="5">其他客商</ion-radio>-->
+                    <ion-radio name="merchantType" ng-click="searchType()" ng-model="condition.typeId" ng-repeat="MerchantType in merchantTypeDetail" ng-value="{{MerchantType.id}}">{{MerchantType.name}}</ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 客商类型modal 结束 -->
+
+    <!-- 更多筛选modal 开始 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">客商筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearchMore();merchantTypeName=''">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">客商编号</ion-label>
+                        <input type="text" ng-model="condition.number" ng-value="" placeholder="请输入客商编号">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">客商名称</ion-label>
+                        <input type="text" ng-model="condition.name" ng-value="" placeholder="请输入客商名称">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openKinds()">
+                        <ion-label class="input-ion-input">客商种类</ion-label>
+                        <input type="text" placeholder="不限" ng-model="merchantTypeName" ng-value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input" ng-if="condition.kindId!=2">
+                        <ion-label class="input-ion-input">身份证号</ion-label>
+                        <input type="text" ng-model="condition.idCard" ng-value="" placeholder="请输入身份证号">
+                    </ion-input>
+                    <ion-input class="item item-input" ng-if="condition.kindId!=2">
+                        <ion-label class="input-ion-input">组织机构代码</ion-label>
+                        <input type="text" ng-model="condition.code" ng-value="" placeholder="请输入组织机构代码">
+                    </ion-input>
+                    <ion-input class="item item-input" ng-if="condition.kindId!=1">
+                        <ion-label class="input-ion-input">统一社会信用代码</ion-label>
+                        <input type="text" ng-model="condition.unifiedSocialCode" ng-value="" placeholder="请输入统一社会信用代码">
+                    </ion-input>
+                </ion-list>
+                <div class="item">
+                    <a class="button button-block button-positive" ng-click="searchMore()">查询</a>
+                </div>
+            </ion-content>
+
+            <!-- 公共背景层 -->
+            <div class="yt-action-backdrop" ng-class="kinds? 'active':''"
+                 ng-show="kinds"
+                 ng-click="close()"></div>
+
+            <!-- 客商类型选择 -->
+            <div class="yt-action-wrapper-bottom" ng-show="kinds" ng-class="kinds ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <!--<ion-radio ng-model="merchantTypeList.text" ng-repeat="merchantType in merchantTypeList" ng-value="merchantType.value" ng-click="close();merchantType.value==0 ? '':(merchantType.value==1?clearUnifiedSocialCode():clearIdCode());">{{merchantType.text}}</ion-radio>-->
+                        <ion-radio name="merchantKind" ng-model="condition.kindId" ng-value="0" ng-click="close();merchantTypeName=''">不限</ion-radio>
+                        <ion-radio name="merchantKind" ng-model="condition.kindId" ng-value="1" ng-click="close();clearUnifiedSocialCode();merchantTypeName='老证书客商'">老证书客商</ion-radio>
+                        <ion-radio name="merchantKind" ng-model="condition.kindId" ng-value="2" ng-click="close();clearIdCode();merchantTypeName='三证合一客商'">三证合一客商</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+    <!-- 更多筛选modal 结束 -->
+
+</ion-view>

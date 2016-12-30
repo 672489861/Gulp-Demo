@@ -1,0 +1,105 @@
+<ion-view view-title="质量通病检查复查" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" nav-direction="back" ng-click="recheck(detailInfo)">
+            审核
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <ion-list>
+            <ion-input class="item item-input item-icon-right item-link" ng-click="openRecheckDate()">
+                <ion-label class="input-ion-input">复查日期</ion-label>
+                <input type="text" value="" readonly ng-model="detailInfo.recheckDate">
+                <i class="icon ion-ios-arrow-right"></i>
+            </ion-input>
+            <ion-input class="item item-input item-icon-right">
+                <ion-label class="input-ion-input">复查人员</ion-label>
+                <input class="text-right" type="text" readonly ng-model="detailInfo.recheckerName">
+            </ion-input>
+            <ion-input class="item item-input item-icon-right">
+                <ion-label class="input-ion-input">检查日期</ion-label>
+                <input class="text-right" type="text" readonly ng-model="detailInfo.checkDate">
+            </ion-input>
+            <ion-input class="item item-input item-icon-right">
+                <ion-label class="input-ion-input">检查人员</ion-label>
+                <input class="text-right" type="text" readonly ng-model="detailInfo.checkerName">
+            </ion-input>
+            <ion-input class="item item-input item-icon-right">
+                <ion-label class="input-ion-input">检查位置</ion-label>
+                <input class="text-right" type="text" readonly ng-model="detailInfo.checkPosName">
+            </ion-input>
+            <ion-input class="item item-input item-icon-right">
+                <ion-label class="input-ion-input">处理人员</ion-label>
+                <input class="text-right" type="text" readonly ng-model="detailInfo.solverName">
+            </ion-input>
+        </ion-list>
+        <div class="list margin-top check-problem-box">
+            <div class="item item-divider item-light">
+                检查图片
+            </div>
+            <div class="item row-no-padding">
+                <div class="upload-img-box col-25" ng-repeat="img in checkAttach" ng-click="preview($index,checkAttach)" upload-img>
+                    <img src="{{img.src}}" style="width: 100%;height: 100%">
+                </div>
+
+            </div>
+            <div class="item item-divider item-light">
+                复查图片
+            </div>
+            <div class="item row-no-padding">
+                <div class="upload-img-box col-25" ng-click="addAttachment()">
+                    <div>
+                        <i>+</i>
+
+                        <p>上传图片</p>
+                    </div>
+                </div>
+                <div class="upload-img-box col-25" ng-repeat="img in image_list" ng-click="previewOrDelete($index)"
+                     upload-img>
+                    <img src="{{img.src}}" style="width: 100%;height: 100%">
+                </div>
+
+            </div>
+
+
+            <ion-item ng-repeat="content in contentList">
+                <h3 class="first-title">
+                    <span>检查内容</span>
+                    <span class="title">{{content.name}}</span>
+                </h3>
+                <div ng-repeat="problem in content.problems">
+                    <p class="third-title">
+                        <span>检查问题</span>
+                        <span >{{$index+1}}、{{problem.name}}</span>
+                    </p>
+                </div>
+            </ion-item>
+        </div>
+    </ion-content>
+
+    <!-- 检查日期 -->
+    <script id="check-date.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="recheckDate">
+        </onezone-datepicker>
+    </script>
+
+    <style type="text/css">
+        .upload-img-box {
+            float: left;
+            padding: 5px;
+            height: 80px;
+            text-align: center;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            width: 25%;
+        }
+        .upload-img-box div {
+            background: #ddd;
+            height: 100%;
+        }
+    </style>
+</ion-view>

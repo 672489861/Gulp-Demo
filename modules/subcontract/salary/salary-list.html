@@ -1,0 +1,173 @@
+<ion-view view-title="薪资统筹" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openTeam()">
+                <p>
+                    <span>所属班组</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+
+    <ion-content class="has-subhead">
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && salaryList.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+
+        <div class="card margin-top" ng-repeat="salary in salaryList">
+            <div class="item has-mark has-avatar-left"
+                 ui-sref="subcontract/salary/salary-detail({personId: salary.personId})">
+                <span ng-class="getClassName({{salary.worktypeId}})">{{salary.worktypeName}}</span>
+                <img src="{{salary.photourl}}"/>
+
+                <p class="has-yt-badge"><span class="title">姓名：</span>{{salary.personName}}
+                    <span class="yt-badge badge-lightorange">特</span></p>
+
+                <p><span class="title">所属班组：</span>{{salary.teamName}}</p>
+
+                <p class="nomargin"><span class="title">实发工资：</span>{{salary.nowMonthSalary}} 元</p>
+
+                <p class="nomargin"><span class="title">人员状态：</span>{{person.outTime == null ? "正常工作" : "退场"}}</p>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <div class="bar bar-footer nopadding">
+        <h4 class="full-width text-center">合计： {{total}} 元</h4>
+    </div>
+
+    <!-- 所属班组列表 -->
+    <script id="query-team.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalTeams.hide()">取消</button>
+                <h1 class="title">班组列表</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-model="condition.teamId" ng-value="-1" ng-click="hideQueryTeam()">全部</ion-radio>
+                    <ion-radio ng-model="condition.teamId" ng-repeat="team in teamList" ng-value="{{team.id}}"
+                               ng-click="hideQueryTeam({{team.id}})">{{team.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">人员筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearchText()">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">姓名</ion-label>
+                        <input type="text" ng-model="condition.personName" placeholder="请输入姓名">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">电话</ion-label>
+                        <input type="text" ng-model="condition.telphone" placeholder="请输入电话">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">身份证号</ion-label>
+                        <input type="text" ng-model="condition.idcard" placeholder="请输入身份证号">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">籍贯</ion-label>
+                        <input type="text" ng-model="condition.nativeplace" placeholder="请输入籍贯">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">年龄</ion-label>
+                        <input type="text" ng-model="condition.age" placeholder="请输入年龄">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openKinds()">
+                        <ion-label class="input-ion-input">工种</ion-label>
+                        <input type="text" placeholder="{{condition.worktypeName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openCalcType()">
+                        <ion-label class="input-ion-input">计取方式</ion-label>
+                        <input type="text" placeholder="{{condition.calcTypeName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                </ion-list>
+            </ion-content>
+            <div class="bar bar-footer bar-positive">
+                <div class="title" ng-click="hideQueryMore()">查询</div>
+            </div>
+
+            <div class="yt-action-backdrop" ng-class="calcType ? 'active':''"
+                 ng-show="calcType"
+                 ng-click="close()"></div>
+
+            <div class="yt-action-wrapper-bottom" ng-show="calcType" ng-class="calcType ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-model="condition.calcTypeId" na-value="-1" name="calcTypeId"
+                                   ng-click="closeCalc(-1,'不限')">不限
+                        </ion-radio>
+                        <ion-radio ng-model="condition.calcTypeId" na-value="1" name="calcTypeId"
+                                   ng-click="closeCalc(1,'按工时计取')">按工时计取
+                        </ion-radio>
+                        <ion-radio ng-model="condition.calcTypeId" na-value="2" name="calcTypeId"
+                                   ng-click="closeCalc(2,'按工日计取')">按工日计取
+                        </ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 工种列表 -->
+    <script id="kinds.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalKinds.hide()">取消</button>
+                <h1 class="title">工种列表</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="hideKinds(-1,'全部')" name="worktypeId" ng-value="-1"
+                               ng-model="condition.worktypeId">全部
+                    </ion-radio>
+                    <ion-radio name="worktypeId" ng-click="hideKinds({{worktype.id}},'{{worktype.name}}')"
+                               ng-value="{{worktype.id}}" ng-model="condition.worktypeId"
+                               ng-repeat="worktype in workTypeList">
+                        {{worktype.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+
+    </style>
+</ion-view>

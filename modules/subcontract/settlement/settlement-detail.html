@@ -1,0 +1,201 @@
+<ion-view view-title="分包结算详细" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+
+    <ion-content>
+        <h3 class="page-detail-title text-center">工程施工分包结算单</h3>
+
+        <p class="nomargin text-center light-bg">编制人：{{settlement.realName}}</p>
+
+        <p class="nomargin text-center padding-bottom light-bg">编制日期：{{settlement.compileTime}}</p>
+
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="projectInfo = true;"
+                 ng-click="projectInfo=!projectInfo">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="40%">结算时间</td>
+                        <td align="right">{{settlement.settlementDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>结算编号</td>
+                        <td align="right">{{settlement.settlementNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>客商名称</td>
+                        <td align="right">{{settlement.merchantName}}</td>
+                    </tr>
+                    <tr>
+                        <td>合同名称</td>
+                        <td align="right">{{settlement.displayId}}</td>
+                    </tr>
+                    <tr>
+                        <td>本次分包结算金额</td>
+                        <td align="right">{{settlement.subcontractCumulativeAmount}} 元</td>
+                    </tr>
+                    <tr>
+                        <td>累计分包结算金额</td>
+                        <td align="right">{{settlement.cumulativeSettlementAmount}} 元</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="inside = false;"
+                 ng-show="hasInside" ng-click="inside=!inside">
+                <p>分包结算明细（合同内）</p>
+                <i class="icon ion-ios-arrow-up" ng-class="inside?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div ng-show="inside">
+                <div class="item" ng-repeat="detail in settlementInDetails">
+                    <h2 class="padding-bottom-small">{{detail.content}}</h2>
+                    <table class="table-detail">
+                        <tbody>
+                        <tr>
+                            <td><span class="note">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：</span>{{detail.unit}}
+                            </td>
+                            <td height="25"><span class="note">工&nbsp;&nbsp;程&nbsp;&nbsp;量：</span>{{detail.quantities}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">累计结算工程量：</span>{{detail.cumulativeSettlementQuantities}}</td>
+                            <td height="25"><span class="note">本次结算工程量：</span>{{detail.settlementQuantities}}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">分包单价：</span>{{detail.price}}</td>
+                            <td height="25"><span class="note">单项金额：</span>{{detail.total}} 元</td>
+                        </tr>
+                        <tr>
+                            <td height="25" COLSPAN="2"><span class="note">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>{{detail.memo}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="item item-light">
+                    <h3 class="text-center font-bold">合计： {{settlementInTotal}} 元</h3>
+                </div>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="outside = false;"
+                 ng-show="hasOutside" ng-click="outside=!outside">
+                <p>分包结算明细（合同外）</p>
+                <i class="icon ion-ios-arrow-up" ng-class="outside?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div ng-show="outside">
+                <div class="item" ng-repeat="detail in settlementOutDetails">
+                    <h2 class="padding-bottom-small">{{detail.content}}</h2>
+                    <table class="table-detail">
+                        <tbody>
+                        <tr>
+                            <td><span class="note">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：</span>{{detail.unit}}
+                            </td>
+                            <td height="25"><span class="note">工&nbsp;&nbsp;程&nbsp;&nbsp;量：</span>{{detail.quantities}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">累计结算工程量：</span>{{detail.cumulativeSettlementQuantities}}</td>
+                            <td height="25"><span class="note">本次结算工程量：</span>{{detail.settlementQuantities}}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">分包单价：</span>{{detail.price}}</td>
+                            <td height="25"><span class="note">单项金额：</span>{{detail.total}} 元</td>
+                        </tr>
+                        <tr>
+                            <td height="25" COLSPAN="2"><span class="note">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>{{detail.memo}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="item item-light">
+                    <h3 class="text-center font-bold">合计： {{settlementOutTotal}} 元</h3>
+                </div>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="materialInfo = false;"
+                 ng-show="hasMaterialDeduction" ng-click="materialInfo=!materialInfo">
+                <p>材料扣款明细</p>
+                <i class="icon ion-ios-arrow-up" ng-class="materialInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div ng-show="materialInfo">
+                <div class="item" ng-repeat="material in settlementMaterialDeductions">
+                    <h2 class="padding-bottom-small">{{material.name}}</h2>
+                    <table class="table-detail">
+                        <tbody>
+                        <tr>
+                            <td><span class="note">材料编号：</span>{{material.number}}</td>
+                            <td height="25"><span class="note">规格型号：</span>{{material.model}}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：</span>{{material.unit}}
+                            </td>
+                            <td height="25"><span class="note">扣款数量：</span>{{material.deductUnit}}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">扣款单价：</span>{{material.deductPrice}}</td>
+                            <td height="25"><span class="note">扣款金额：</span>{{material.deductAmount}} 元</td>
+                        </tr>
+                        <tr>
+                            <td height="25" COLSPAN="2"><span class="note">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>{{material.memo}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="item item-light">
+                    <h3 class="text-center font-bold">合计： {{deductionTotal}} 元</h3>
+                </div>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="other = false;"
+                 ng-show="hasOtherExpense" ng-click="other=!other">
+                <p>其他项目费用及金额</p>
+                <i class="icon ion-ios-arrow-up" ng-class="other?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div ng-show="other">
+                <div class="item" ng-repeat="other in settlementOtherExpenses">
+                    <h2 class="padding-bottom-small">{{other.name}}</h2>
+                    <table class="table-detail">
+                        <tbody>
+                        <tr>
+                            <td><span class="note">费用金额：</span>{{other.amount}} 元</td>
+                            <td height="25"><span class="note">计费类型：</span>{{other.chargeTypeId == 1 ? "扣款" : "追加"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="note">经&nbsp;&nbsp;办&nbsp;&nbsp;人：</span>{{other.operator}}</td>
+                            <td height="25" ><span class="note">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>{{other.memo}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="25" COLSPAN="2"><span
+                                    class="note">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span><a ng-click="download(other);">{{other.attachName}}&nbsp;&nbsp;({{other.fileSize}})</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="item item-light">
+                    <h3 class="text-center font-bold">合计： {{otherTotal}} 元</h3>
+
+                    <h3 class="text-center font-bold">其中扣款合计： {{chargedTotal}} 元&nbsp;&nbsp;&nbsp;&nbsp;追加合计：
+                        {{sumTotal}} 元</h3>
+                </div>
+
+                <div class="item item-light">
+                </div>
+            </div>
+
+        </div>
+    </ion-content>
+</ion-view>

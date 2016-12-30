@@ -1,0 +1,18 @@
+<ion-view view-title="消息">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" scroll="false">
+        <ion-slide-box class="parent-slider" slide-tabs-scrollable="true" show-pager="false"
+                       delegate-handle="delegate-handle" ion-slide-tabs>
+
+            <ion-slide ng-repeat="module in selectedModules"
+                       ion-slide-tab-label="{{module.shortName}}"
+                       slide-changed="{{module.moduleId}},{{module.moduleName}},{{module.shortName}}">
+                <ng-include src="getUrl(module)"></ng-include>
+            </ion-slide>
+        </ion-slide-box>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,140 @@
+<ion-view view-title="人员信息">
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13">
+        <ul class="ul-inline">
+            <li class="width-50" ng-click="openQueryTypeUp()"><span>所属公司</span><i class="icon ion-chevron-down"></i>
+            </li>
+            <li class="width-50" ng-click="openQueryMore()"><span>更多筛选</span><i class="icon ion-chevron-down"></i></li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content class="has-subheader">
+
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && employeeList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+
+        <div class="card margin-top" ng-repeat="emp in employeeList">
+            <div class="item has-mark" ng-click="viewDetail(emp.id)">
+                <span class="smart-mark calm-bg" ng-if="emp.orgType=='分公司'">{{emp.orgType}}</span>
+                <span class="smart-mark royal-bg" ng-if="emp.orgType=='集团'">{{emp.orgType}}</span>
+                <p><span class="title">姓名：</span>{{emp.name}}</p>
+
+                <p><span class="title">所属公司：</span>{{emp.orgName}}</p>
+
+                <p class="nomargin"><span class="title">电话号码：</span>{{emp.telephone}}</p>
+            </div>
+        </div>
+
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 所属公司列表 -->
+    <script id="query-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideQueryType()">关闭</button>
+                <h1 class="title">人员所属公司</h1>
+            </ion-header-bar>
+            <!-- 固定搜索框 开始 -->
+            <div class="bar bar-subheader item-input-inset bar-stable">
+                <label class="item-input-wrapper light-bg">
+                    <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+                    <input type="search" placeholder="请输入公司名称" ng-focus="entering = true" ng-blur="entering = false"
+                           ng-model="orgSearch">
+                    <i class="icon ion-ios-close placeholder-icon" ng-show="entering"></i>
+                </label>
+            </div>
+            <!-- 固定搜索框 结束 -->
+            <ion-content class="has-subheader">
+                <ion-list>
+                    <ion-radio name="company" ng-model="condition.org.orgId"
+                               ng-repeat="org in companies|filter:{name:orgSearch}" ng-value="{{org.id}}"
+                               ng-click="hideQueryType(org)">{{org.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">关闭</button>
+                <h1 class="title">人员筛选</h1>
+                <button class="button button-clear button-primary" ng-click="resetCondition()">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">姓名</ion-label>
+                        <input type="text" ng-model="condition.realName" placeholder="请输入姓名">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">电话</ion-label>
+                        <input type="text" ng-model="condition.telephone" placeholder="请输入电话">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="opensex()">
+                        <ion-label class="input-ion-input">性别</ion-label>
+                        <input type="text" placeholder="{{condition.sex|sexFilter}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openQueryTypeLeft()">
+                        <ion-label class="input-ion-input">所属公司</ion-label>
+                        <input type="text" placeholder="{{condition.org.orgName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openInsure()">
+                        <ion-label class="input-ion-input">参保情况</ion-label>
+                        <input type="text" placeholder="{{condition.isInsured|insureFilter}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                </ion-list>
+                <div class="item item-borderless">
+                    <a class="button button-block button-positive" ng-click="doSearch()">查询</a>
+                </div>
+            </ion-content>
+
+            <!-- 多个下拉内容，共用一个背景 -->
+            <div class="yt-action-backdrop" ng-class="sex || insure ? 'active':''"
+                 ng-show="sex || insure"
+                 ng-click="close()"></div>
+
+            <!-- 性别 -->
+            <div class="yt-action-wrapper-bottom" ng-show="sex" ng-class="sex ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio name="sex" ng-click="selectSex()" ng-value="-1" ng-model="condition.sex">不限
+                        </ion-radio>
+                        <ion-radio name="sex" ng-click="selectSex()" ng-value="0" ng-model="condition.sex">男</ion-radio>
+                        <ion-radio name="sex" ng-click="selectSex()" ng-value="1" ng-model="condition.sex">女</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+
+            <!-- 参保情况 -->
+            <div class="yt-action-wrapper-bottom" ng-show="insure" ng-class="insure ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio name="isInsured" ng-click="selectInsure()" ng-value="-1"
+                                   ng-model="condition.isInsured">不限
+                        </ion-radio>
+                        <ion-radio name="isInsured" ng-click="selectInsure()" ng-value="1"
+                                   ng-model="condition.isInsured">已参保
+                        </ion-radio>
+                        <ion-radio name="isInsured" ng-click="selectInsure()" ng-value="0"
+                                   ng-model="condition.isInsured">未参保
+                        </ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+</ion-view>

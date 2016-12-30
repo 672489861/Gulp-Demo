@@ -1,0 +1,226 @@
+<ion-content scroll="true">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListDataByM()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <div class="cb-select" ng-click="switchOrgListByM()">
+        <span>{{moduleByM.orgNameByM}}</span>
+        <i class="icon ion-arrow-down-b"></i>
+    </div>
+
+    <ion-list class="ca-list">
+        <ion-item ng-show="moduleByM.m100301" ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">采购入库总金额{{amount1 | number:3}}万元，累计结算{{balanceAmount1 | number:3}}万元</p>
+
+                <div class="arrow-box arrow-blue">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && list1.length > 0">
+                <p ng-repeat="item1 in list1">{{item1.merchantName}}供应商累计采购供货{{item1.purchaseAmount / 10000 | number:3}}万元，累计结算{{item1.balanceAmout / 10000 | number:3}}万元 </p>
+                <a class="more" ng-show="list1.length > 10">更多<span> ></span></a>
+            </div>
+        </ion-item>
+        <ion-item ng-show="moduleByM.m100301" ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">租赁入库总金额{{amount2 | number:3}}万元，累计结算{{balanceAmount2 | number:3}}万元</p>
+
+                <div class="arrow-box arrow-lightBlue">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && list2.length > 0">
+                <p ng-repeat="item2 in list2">{{item2.merchantName}}供应商累计租赁供货{{item2.purchaseAmount / 10000 | number:3}}万元，预计租金{{item2.purchaseAmount / 10000 | number:3}}万元，累计结算{{item2.balanceAmout / 10000 | number:3}}万元 </p>
+                <a class="more" ng-show="list2.length > 10">更多<span> ></span></a>
+            </div>
+        </ion-item>
+        <ion-item ng-show="moduleByM.m100302" ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">领用总金额{{amount3 | number:3}}万元</p>
+
+                <div class="arrow-box arrow-orange">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && list3.length > 0">
+                <p ng-repeat="item3 in list3">{{item3.teamName}}单位累计领用{{item3.deliveryAmounts / 10000 | number:3}}万元，退库{{item3.reimburseAmounts / 10000 | number:3}}万元，报废{{item3.brokenAmounts / 10000 | number:3}}万元 </p>
+                <a class="more" ng-show="list3.length > 10">更多<span> ></span></a>
+            </div>
+        </ion-item>
+        <ion-item ng-show="moduleByM.m100303" ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">退库总金额{{amount4 | number:3}}万元</p>
+
+                <div class="arrow-box arrow-green">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && list4.length > 0">
+                <p ng-repeat="item4 in list4">{{item4.teamName}}单位退库{{item4.amount / 10000 | number:3}}万元 </p>
+                <a class="more" ng-show="list4.length > 10">更多<span> ></span></a>
+            </div>
+        </ion-item>
+        <ion-item ng-show="moduleByM.m100306" ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">退货总金额{{amount5 | number:3}}万元</p>
+
+                <div class="arrow-box arrow-yellow">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && list5.length > 0">
+                <p ng-repeat="item5 in list5">{{item5.projectName}}供应商退货累计{{item5.amount / 10000 | number:3}}万元 </p>
+                <a class="more" ng-show="list5.length > 10">更多<span> ></span></a>
+            </div>
+        </ion-item>
+        <ion-item ng-show="moduleByM.m100304" ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">报废总金额{{amount6 | number:3}}万元</p>
+
+                <div class="arrow-box arrow-red">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && list6.length > 0">
+                <p ng-repeat="item6 in list6">{{item6.projectName}}单位报废{{item6.amount / 10000 | number:3}}万元 </p>
+                <a class="more" ng-show="list6.length > 10">更多<span> ></span></a>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <!-- 公共背景层 如果有多个弹框共用一个背景层 -->
+    <div class="yt-action-backdrop" ng-class="showOrgListByM ? 'active':''" ng-show="showOrgListByM"
+         ng-click="switchOrgListByM()"></div>
+
+    <!-- 切换组织机构-->
+    <!-- yt-action-wrapper-top 一定要和has-header 组合用，否则缺少top值 -->
+    <div class="yt-action-wrapper-top has-header" ng-show="showOrgListByM" ng-class="showOrgListByM ? 'yt-action-up':''">
+        <div class="yt-action cb-action">
+            <ion-list>
+                <ion-item ng-repeat="orgByM in moduleByM.orgListByM" ng-click="changeOrgByM(orgByM.id)" nav-direction="enter">{{orgByM.name}}</ion-item>
+            </ion-list>
+        </div>
+    </div>
+</ion-content>
+<style type="text/css">
+    .item {
+        border: 0;
+    }
+
+    .ca-list .list > .item {
+        border: 0;
+        margin: 15px;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .ca-list .list > .item .item {
+        border-radius: 10px;
+    }
+
+    .ca-list p {
+        margin: 0;
+    }
+
+    .ca-list .fl {
+        float: left;
+        width: 80%;
+    }
+
+    .ca-list .arrow-box {
+        float: right;
+        position: relative;
+        width: 23px;
+        height: 23px;
+        overflow: hidden;
+    }
+
+    .ca-list .arrow-box img {
+        position: absolute;
+        left: -24px;
+        border-right: 24px solid transparent;
+    }
+
+    .ca-list .arrow-blue img {
+        -webkit-filter: drop-shadow(24px 0 #78a3ed);
+        filter: drop-shadow(24px 0 #78a3ed);
+    }
+
+    .ca-list .arrow-lightBlue img {
+        -webkit-filter: drop-shadow(24px 0 #78dbed);
+        filter: drop-shadow(24px 0 #78dbed);
+    }
+
+    .ca-list .arrow-orange img {
+        -webkit-filter: drop-shadow(24px 0 #fba722);
+        filter: drop-shadow(24px 0 #fba722);
+    }
+
+    .ca-list .arrow-green img {
+        -webkit-filter: drop-shadow(24px 0 #6bddb4);
+        filter: drop-shadow(24px 0 #6bddb4);
+    }
+
+    .ca-list .arrow-yellow img {
+        -webkit-filter: drop-shadow(24px 0 #e1e069);
+        filter: drop-shadow(24px 0 #e1e069);
+    }
+
+    .ca-list .arrow-red img {
+        -webkit-filter: drop-shadow(24px 0 #f87d7d);
+        filter: drop-shadow(24px 0 #f87d7d);
+    }
+
+    .ca-list .list-box {
+        clear: both;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #fff;
+        overflow: hidden;
+        zoom: 1;
+    }
+
+    .ca-list .list-box p {
+        border-top: 1px dotted #e5e5e5;
+        line-height: 40px;
+        font-size: 12px;
+        color: #999;
+    }
+
+    .ca-list .list-box p:first-child {
+        border: 0;
+    }
+
+    .ca-list .list-box .more {
+        float: right;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .ca-list .list-box .more:hover {
+        color: #387ef5;
+    }
+
+    .ca-list .list-box .more span {
+        font-family: "宋体";
+    }
+
+    .ca-list {
+    }
+
+    .cb-select{
+        height: 45px;
+        line-height: 45px;
+        border-bottom:1px solid #f2f2f2;
+        background-color: #fff;
+        text-align: center;
+        position: relative;
+        z-index: 12;
+    }
+
+    .cb-action{
+        max-height: none;
+    }
+</style>

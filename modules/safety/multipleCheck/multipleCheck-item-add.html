@@ -1,0 +1,259 @@
+<ion-view view-title="新增安全检查" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="submit()">
+            提交
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{detail.projectName}}</h3>
+        <ion-list>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="personInfo = !personInfo"
+                 ng-init="personInfo = true;">
+                <p>项目人员信息</p>
+                <i class="icon ion-ios-arrow-down" ng-class="personInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical item-icon-right item-link" ng-show="personInfo"
+            ng-click="editPersonInfo()">
+                <i class="icon ion-ios-arrow-right"></i>
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="50%">项目经理：{{detail.manager}}</td>
+                        <td align="right">{{detail.managerTel}}</td>
+                    </tr>
+                    <tr>
+                        <td>技术负责人：{{detail.technician}}</td>
+                        <td align="right">{{detail.technicianTel}}</td>
+                    </tr>
+                    <tr>
+                        <td>质检员：{{detail.inspector}}</td>
+                        <td align="right">{{detail.inspectorTel}}</td>
+                    </tr>
+                    <tr>
+                        <td>安全员：{{detail.safetyOfficer}}</td>
+                        <td align="right">{{detail.safetyOfficerTel}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectInfo =!projectInfo"
+                 ng-init="projectInfo = true;">
+                <p>项目概况</p>
+                <i class="icon ion-ios-arrow-down" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical item-icon-right item-link" ng-show="projectInfo"
+            ng-click="editProjectInfo()">
+                <i class="icon ion-ios-arrow-right"></i>
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="60%">建筑面积：{{detail.areaOfStructure}}㎡</td>
+                        <td>造价：{{detail.cost}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>地上层数：{{detail.groundLayer}}层</td>
+                        <td>地下层数：{{detail.underGroundLayer}}层</td>
+                    </tr>
+                    <tr>
+                        <td>结构类型：{{detail.structureName}}</td>
+                        <td>参建人数：{{detail.personNumber}}人</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="progress =!progress"
+                 ng-init="progress = true;">
+                <p>项目时间与进展</p>
+                <i class="icon ion-ios-arrow-down" ng-class="progress?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="progress">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-click="openStartDate()">
+                        <td width="35%">实际开工时间</td>
+                        <td align="right" class="link">{{detail.actualBeginDate}}<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ng-click="openEndDate()">
+                        <td width="35%">实际完工时间</td>
+                        <td align="right" class="link">{{detail.plannedEndDate}}<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ng-click="editProjectStatus()">
+                        <td width="35%">形象进度</td>
+                        <td align="right" class="link">
+                            <div ng-if="detail.projectStatus == null">
+                                未填写
+                            </div>
+                            <div ng-if="detail.projectStatus != null">
+                                <div ng-if="detail.projectStatus.length <=0">
+                                    未填写
+                                </div>
+                                <div ng-if="detail.projectStatus.length > 0">
+                                    {{detail.projectStatus | cut:true:15:'...'}}
+                                </div>
+                            </div>
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="situation =!situation"
+                 ng-init="situation = true;">
+                <p>请填写检查情况</p>
+                <i class="icon ion-ios-arrow-down" ng-class="situation?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="situation">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-click="openCheckDate()">
+                        <td width="35%">检查日期</td>
+                        <td align="right" class="link">{{detail.checkDate}}<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ng-click="toRandomInfo()">
+                        <td width="35%">抽查情况</td>
+                        <td align="right" class="link" >
+                            <div ng-if="detail.spotCount != null">
+                                <span ng-if="detail.spotCount > 0">{{detail.spotCount}}项有问题</span>
+                                <span ng-if="detail.spotCount == 0">无问题</span>
+                                <span ng-if="detail.spotCount < 0">未设置</span>
+                            </div>
+                            <span ng-if="detail.spotCount == null">未设置</span>
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    <tr ng-click="toCheckerList()">
+                        <td width="35%">检查人</td>
+                        <td align="right" class="link">
+                            {{detail.allCheckerName}}
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="advise =!advise"
+                 ng-init="advise = true;">
+                <p>请填写改进要求</p>
+                <i class="icon ion-ios-arrow-down" ng-class="advise?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="advise" ng-click="editAdviceText()">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">改进要求</td>
+                        <td align="right" class="link">
+                            <div ng-if="detail.advice == null">
+                                未填写
+                            </div>
+                            <div ng-if="detail.advice != null">
+                                <div ng-if="detail.advice.length <=0">
+                                    未填写
+                                </div>
+                                <div ng-if="detail.advice.length > 0">
+                                    {{detail.advice | cut:true:15:'...'}}
+                                </div>
+                            </div>
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ion-list>
+        <div class="list check-problem-box">
+            <div class="item item-divider item-divider-title item-icon-right noborder-top">
+                <p>相关问题</p>
+                <i ng-click="openPosition()" ng-show="groupList.length > 0" class="icon ion-plus-circled positive" style="color: #387ef5; font-size: 26px"></i>
+            </div>
+            <div ng-show="groupList.length <= 0" class="item item-divider item-positive margin-top margin-bottom text-center positive-bg"
+            ng-click="openPosition()">
+                <i class="icon ion-plus"></i>
+                增加相关问题
+            </div>
+            <div ng-show="groupList.length > 0" ng-repeat="group in groupList">
+                <div class="item item-divider item-light">
+                    <span class="font-bold">{{$index+1}}、{{group.checkPosName}}</span>
+                    <a class="fr operation" ng-click="delGroup($index)" ng-init="groupIndex = $index;">
+                        删除
+                    </a>
+                </div>
+
+                <div class="item item-divider item-light">
+                    检查图片
+                </div>
+                <div class="item row-no-padding">
+                    <div class="upload-img-box col-25" ng-click="addAttachment(groupIndex)">
+                        <div>
+                            <i>+</i>
+
+                            <p>上传图片</p>
+                        </div>
+                    </div>
+                    <div class="upload-img-box col-25" ng-repeat="img in group.attachList" ng-click="previewOrDelete(groupIndex,$index,group.attachList)" upload-img>
+                        <img src="{{img.src}}" style="width: 100%;height: 100%">
+                    </div>
+
+                </div>
+
+                <div class="item item-divider item-light">
+                    检查问题
+                    <a class="fr operation" ng-click="toChoose(groupIndex,'safety/multipleCheck/multipleCheck-content')">
+                        添加
+                    </a>
+                </div>
+                <ion-item ng-repeat="content in group.content">
+                    <a class="fr" ng-click="delContent(groupIndex,$index)">删除</a>
+                    <h3 class="first-title">
+                        <span>检查内容</span>
+                        <span class="title">{{content.name}}</span>
+                    </h3>
+                    <div ng-click="toChooseById(groupIndex,content.id,'safety/multipleCheck/multipleCheck-content')"
+                         ng-repeat="item in content.items" ng-if="content.items.length > 0">
+                        <i class="icon ion-record positive second-title-icon"></i>
+                        <p class="second-title">
+                            <span>检查项目</span>
+                            <span>{{item.name}}</span>
+                        </p>
+                        <div>
+                            <p class="third-title" ng-repeat="problem in item.problems">
+                                <span>检查问题</span>
+                                <span >{{$index+1}}、{{problem.name}}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div  ng-click="toChooseById(groupIndex,content.id,'safety/multipleCheck/multipleCheck-content-item')"
+                          ng-if="content.items == undefined || content.items.length <= 0">
+                        <i class="icon ion-record positive second-title-icon"></i>
+                        <p class="second-title">
+                            <span>检查项目</span>
+                            <span style="color: #ef473a;">请添加检查项目</span>
+                        </p>
+                    </div>
+                </ion-item>
+            </div>
+        </div>
+    </ion-content>
+
+    <!-- 检查日期 -->
+    <script id="check-date.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="checkDate">
+        </onezone-datepicker>
+    </script>
+
+    <!-- 实际开工时间 -->
+    <script id="start-date.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startDate">
+        </onezone-datepicker>
+    </script>
+
+    <!-- 实际完工时间 -->
+    <script id="end-date.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="endDate">
+        </onezone-datepicker>
+    </script>
+</ion-view>

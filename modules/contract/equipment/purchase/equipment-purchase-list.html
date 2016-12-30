@@ -1,0 +1,116 @@
+<ion-view title="设备采购合同" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openContractStatus()">
+                <p>
+                    <span>合同状态</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && purchaseList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card margin-top has-body-card" ng-repeat="item in purchaseList">
+            <div class="item" ui-sref="contract/equipment/purchase/equipment-purchase-detail({id: item.id})">
+                <!--<span class="smart-mark assertive-bg">最新</span>-->
+                <span class="smart-mark {{item.statusId == 1 ?  'assertive-bg':'positive-bg'}}">{{item.statusId == 1? "已提交":"已保存"}}</span>
+                <h2>{{item.projectName}}</h2>
+                <div class="card-body">
+                    <p>购货单位：{{item.purchaseName}}</p>
+                    <p>供货单位：{{item.supplyName}}</p>
+                    <p>合同价款：{{item.cost}}（{{item.hasTax == 1 ? '含税' : '不含税'}}）</p>
+                </div>
+                <p>组织机构：{{item.orgName}}</p>
+            </div>
+        </div>
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 合同状态 -->
+    <script id="contract-status.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideContractStatus()">取消</button>
+                <h1 class="title">合同状态</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="searchData()" ng-model="condition.statusId" ng-value="-1">全部状态</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.statusId" ng-value="0">已保存</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.statusId" ng-value="1">已提交</ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideQueryMore()">取消</button>
+                <h1 class="title">合同筛选</h1>
+                <button class="button button-clear button-primary"
+                        ng-click="clearSearchText();$event.stopPropagation();">清空
+                </button>
+            </ion-header-bar>
+            <ion-content>
+
+                <ion-list class="yt-form">
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">合同编号</ion-label>
+                        <input type="text" placeholder="请输入合同编号" ng-model="condition.displayId">
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">工程名称</ion-label>
+                        <input type="text" placeholder="请输入工程名称" ng-model="condition.projectName">
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">供货单位</ion-label>
+                        <input type="text" placeholder="请输入供货单位" ng-model="condition.supplyName">
+                    </ion-input>
+
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">购货单位</ion-label>
+                        <input type="text" placeholder="请输入购货单位" ng-model="condition.purchaseName">
+                    </ion-input>
+                </ion-list>
+
+                <div class="item">
+                    <a class="button button-block button-positive" ng-click="searchData()">查询</a>
+                </div>
+            </ion-content>
+        </div>
+    </script>
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+</ion-view>

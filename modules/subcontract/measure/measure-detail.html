@@ -1,0 +1,59 @@
+<ion-view view-title="分包计量详细">
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{measure.year}}年{{measure.month}}月分包计量</h3>
+
+        <p class="nomargin text-center light-bg">编制人：{{measure.realName}}</p>
+
+        <p class="nomargin text-center padding-bottom light-bg">编制日期：{{measure.compileTime}}</p>
+
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="projectInfo=true"
+                 ng-click="projectInfo=!projectInfo">
+                <p>分包信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="40%">计量编号</td>
+                        <td align="right">{{measure.measureNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>本期计量金额（元）</td>
+                        <td align="right">{{measure.total}}</td>
+                    </tr>
+                    <tr>
+                        <td>合同内（元）</td>
+                        <td align="right">{{measure.withinAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>合同外（元）</td>
+                        <td align="right">{{measure.withoutAmount}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="content = true "
+                 ng-click="content=!content">
+                <p>详细信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="content?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-icon-right item-link" ng-show="content" ng-repeat="detail in measureDetail"
+                 ui-sref="subcontract/measure/measure-contract-list({id: measure.id,merchantId:detail.merchantId,merchantName:detail.merchantName})">
+                <i class="icon ion-ios-arrow-right"></i>
+
+                <h2 class="padding-bottom-small">{{detail.merchantName}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td colspan="2" height="25"><span class="note">合同内：</span>{{detail.withinAmount}} 元</td>
+                        <td colspan="2" height="25"><span class="note">合同外：</span>{{detail.withoutAmount}} 元</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

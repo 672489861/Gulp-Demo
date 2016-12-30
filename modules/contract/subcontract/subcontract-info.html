@@ -1,0 +1,24 @@
+<ion-view view-title="分包内容">
+    <div class="bar bar-subheader nopadding">
+        <p class="head-title">分包费用总计：{{subcontractSum}}元</p>
+    </div>
+    <ion-content class="has-subheader">
+        <ion-list ng-repeat="item in subcontractInfo">
+            <ion-item class="margin-bottom">
+                <h2 class="padding-bottom">{{item.content}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td width="50%" height="25"><span class="note">单位：</span>{{item.unit}}</td>
+                        <td><span class="note">工程量：</span>{{item.quantities}}</td>
+                    </tr>
+                    <tr>
+                        <td height="25"><span class="note">单价：</span>{{item.price}}</td>
+                        <td><span class="note">单项总计（元）：</span>{{item.total}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

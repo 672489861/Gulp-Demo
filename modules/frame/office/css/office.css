@@ -1,0 +1,111 @@
+.home-list .list {
+    /*margin: 0 10px;*/
+}
+
+.home-item ,
+.home-item.item-complex{
+    padding: 0;
+    margin: 0;
+}
+
+.home-item:last-child .item-content .content-wrap {
+    border-bottom: none;
+}
+
+.home-item.item-complex .item-content,
+.home-item .item-content {
+    /*border-bottom: 1px solid #e9e9e9;*/
+    padding:15px 10px 0;
+}
+
+.home-item .item-content .content-wrap,
+.home-item .item-complex .item-content .content-wrap {
+    overflow: hidden;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+
+.home-item .item-content .left {
+    width: 80%;
+    float: left;
+    position: relative;
+    padding-left: 50px;
+}
+
+.home-item .item-content .left img {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: -20px;
+}
+
+.home-item .item-content .left p {
+    color: #999;
+}
+
+.home-item .right {
+    width: 20%;
+    float: right;
+    position: relative;
+    border-left: 1px solid #e9e9e9;
+}
+
+.home-item .item-content .right p {
+    height: 41px;
+    line-height: 41px;
+    text-align: right;
+    width: 80%;
+    padding-right: 10px;
+    position: relative;
+}
+
+.home-item .item-content .right p span {
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    right: 10px;
+    font-size: 10px;
+    color: #999;
+}
+
+.home-item .item-content .right i,
+.home-item .item-content .right canvas{
+    position: absolute;
+    top: 50%;
+    /*left: 0;*/
+    right: 0;
+    bottom: 0;
+    font-size: 22px;
+    margin-top: -11px;
+    margin-left: 8px;
+}
+
+.home-item .item-content .badge-lightorange{
+    background: #f8b551;
+}
+.home-item .item-content .has-yt-badge{
+    position: relative;
+}
+.home-item .item-content .yt-badge{
+    font-size: 10px;
+    line-height: 12px;
+    padding: 1px;
+    border-radius: 2px;
+    position: absolute;
+    top: 2px;
+    color: white;
+    margin-left: 5px;
+}
+.modal.bottom-sheet {
+    bottom: 0;
+    min-height: initial;
+    top: initial;
+    height: 50%;
+    border-width: 1px;
+    border-style: solid;
+}

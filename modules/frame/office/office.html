@@ -1,0 +1,65 @@
+<ion-view hide-back-button="true" ng-init="entering = false;">
+    <ion-nav-title>
+        <div class="title" ng-click="switchOrgList()">
+            {{orgName}}
+            <i ng-show="orgList.length > 1" class="icon ion-arrow-down-b"></i>
+        </div>
+    </ion-nav-title>
+
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset bar-stable">
+        <label class="item-input-wrapper light-bg">
+            <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+            <input type="search" placeholder="搜索" ng-focus="entering = true" ng-blur="entering = false"
+                   ng-model="searchText">
+        </label>
+        <i class="icon ion-ios-close placeholder-icon clear-search" ng-show="entering"
+           ng-click="clearSearchText();$event.stopPropagation();"></i>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content class="has-tabs">
+        <ion-list class="list-borderless home-list">
+            <ion-item class="home-item item-remove-animate" ng-repeat="menu in menuList | filter:searchText"
+                      ng-click="selectedMenu(menu)" nav-direction="forward">
+                <div class="content-wrap">
+                    <div class="left">
+                        <img class="item-image" ng-src="{{menu.data.icon}}" alt=""/>
+
+                        <h2 class="has-yt-badge">{{menu.data.name}}</h2>
+
+                        <p>查看工地信息,排除安全隐患</p>
+                    </div>
+                    <div class="right">
+                        <p class="text-right">打开</p>
+                        <i class="icon positive ion-ios-compose-outline"></i>
+                    </div>
+                </div>
+                <ion-option-button class="button-stable">取消</ion-option-button>
+                <ion-option-button class="button-assertive">删除</ion-option-button>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+
+    <!-- 切换组织机构 -->
+    <div class="yt-action-backdrop" ng-class="showOrgList ? 'active':''" ng-show="showOrgList"
+         ng-click="switchOrgList()"></div>
+
+    <!-- yt-action-wrapper-top 一定要和has-header 组合用，否则缺少top值 -->
+    <div class="yt-action-wrapper-top has-header" ng-show="showOrgList" ng-class="showOrgList ? 'yt-action-up':''">
+        <div class="yt-action">
+            <ion-list>
+                <ion-item ng-repeat="orgInfo in orgList" ng-click="changeOrg(orgInfo.rootOrgId,orgInfo.orgName)"
+                          nav-direction="enter">
+                    {{orgInfo.orgName}}
+                </ion-item>
+            </ion-list>
+        </div>
+    </div>
+
+    <link href="modules/frame/office/css/office.css" rel="stylesheet">
+</ion-view>
+
+
+
+

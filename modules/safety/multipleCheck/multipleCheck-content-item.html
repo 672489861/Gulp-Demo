@@ -1,0 +1,22 @@
+<ion-view view-title="请选择检查项目" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()"></button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="back()">
+            确定
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <ion-list>
+            <ion-checkbox class="item-icon-right item-link" ng-repeat="item in items" ng-checked="item.checked" ng-model="item.checked" ng-click="goProblem(pId,item.id,'safety/multipleCheck/multipleCheck-content-item',item)"  nav-direction="forward">
+                {{item.name}}
+                <span class="item-note"></span>
+                <i class="icon ion-ios-arrow-right"></i>
+            </ion-checkbox>
+        </ion-list>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,232 @@
+<ion-view title="现场设备信息" hide-back-button="true">
+    <!--返回按钮 重置数据-->
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13 search-wrap">
+        <ul class="ul-inline search-box">
+            <li class="width-50 search-item" ng-click="openQueryTypeUp()">
+                <p>
+                    <span>设备状态</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+            <li class="width-50 search-item" ng-click="openQueryMore()">
+                <p>
+                    <span>更多筛选</span>
+                    <i class="icon ion-chevron-down"></i>
+                </p>
+            </li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+        <!--下拉刷新-->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && deviceInfoList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+
+        <div class="device-info-list" ng-repeat="deviceInfo in deviceInfoList">
+            <div class="card margin-top">
+                <div class="item has-mark" ui-sref="device/information/device-info-detail({id:deviceInfo.id})">
+                    <span class="smart-mark {{deviceInfo.identifyId == 1 ? 'assertive-bg':'royal-bg'}}">{{deviceInfo.identifyId == 1 ? "特种":"一般"}}</span>
+
+                    <p><span class="title">设备编号：</span>{{deviceInfo.number}}</p>
+
+                    <p><span class="title">设备来源：</span>{{deviceInfo.source}}</p>
+
+                    <p class="nomargin"><span class="title">设备类别：</span>{{deviceInfo.category}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 设备状态 -->
+    <script id="query-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideQueryType()">取消</button>
+                <h1 class="title">设备状态</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="searchData()" ng-model="condition.statusId" ng-value="-1">不限</ion-radio>
+                    <ion-radio ng-repeat="item in statuses" ng-click="searchData()" ng-model="condition.statusId" ng-value="{{item.id}}">{{item.name}}</ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 更多筛选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">设备筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearchText();$event.stopPropagation();">清空</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">设备名称</ion-label>
+                        <input type="text" placeholder="请输入设备名称" ng-model="condition.name">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">设备编号</ion-label>
+                        <input type="text" placeholder="请输入设备编号" ng-model="condition.number">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openDeviceKinds()">
+                        <ion-label class="input-ion-input">设备类别</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.categoryName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openDeviceFrom()">
+                        <ion-label class="input-ion-input">设备来源</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.sourceName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openDeviceMark()">
+                        <ion-label class="input-ion-input">设备标识</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.markName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openCompanyList()">
+                        <ion-label class="input-ion-input">提供设备单位</ion-label>
+                        <input type="text" placeholder="不限" value="" readonly ng-model="condition.provideName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openSupplyList()">
+                        <ion-label class="input-ion-input">设备供应商</ion-label>
+                        <input type="text" placeholder="不限" value="" ng-model="condition.supplyName" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openStartTime()">
+                        <ion-label class="input-ion-input">进场时间（起）</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.startTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openEndTime()">
+                        <ion-label class="input-ion-input">进场时间（止）</ion-label>
+                        <input type="text" placeholder="" ng-model="condition.endTime" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+
+
+                </ion-list>
+                <div class="item">
+                    <a class="button button-block button-positive" ng-click="searchData()">查询</a>
+                </div>
+            </ion-content>
+
+            <!-- 多个下拉内容，共用一个背景 -->
+            <div class="yt-action-backdrop" ng-class="isDeviceKinds || isDeviceFrom || isDeviceMark ? 'active':''"
+                 ng-show="isDeviceKinds || isDeviceFrom || isDeviceMark"
+                 ng-click="close()"></div>
+
+            <!-- 设备类别 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isDeviceKinds" ng-class="isDeviceKinds ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeDeviceKinds('不限')" ng-model="condition.categoryId" ng-value="-1">不限</ion-radio>
+                        <ion-radio ng-repeat="item in categories" ng-click="closeDeviceKinds(item.name)" ng-model="condition.categoryId" ng-value="{{item.id}}">{{item.name}}</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+
+            <!-- 设备来源 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isDeviceFrom" ng-class="isDeviceFrom ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeDeviceFrom('不限')" ng-model="condition.sourceId" ng-value="-1">不限</ion-radio>
+                        <ion-radio ng-repeat="source in sources" ng-click="closeDeviceFrom(source.name)" ng-model="condition.sourceId" ng-value="{{source.id}}">{{source.name}}</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+
+            <!-- 设备标识 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isDeviceMark" ng-class="isDeviceMark ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeDeviceMark('不限')" ng-model="condition.identifyId" ng-value="-1">不限</ion-radio>
+                        <ion-radio ng-repeat="identity in identities" ng-click="closeDeviceMark(identity.name)" ng-model="condition.identifyId" ng-value="{{identity.id}}">{{identity.name}}</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 提供设备单位 -->
+    <script id="company.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideCompany()">取消</button>
+                <h1 class="title">提供设备单位列表</h1>
+            </ion-header-bar>
+
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-model="condition.provideOrgId" ng-value="-1"  ng-click="hideCompanyList('不限')">不限</ion-radio>
+                    <ion-radio ng-model="condition.provideOrgId" ng-repeat="provide in provideInfo"  ng-value="{{provide.id}}"  ng-click="hideCompanyList(provide.name)">{{provide.name}}</ion-radio>
+                </ion-list>
+            </ion-content>
+
+        </div>
+    </script>
+
+    <!-- 设备供应商 -->
+    <script id="supply.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideSupply()">取消</button>
+                <h1 class="title">供应商列表</h1>
+            </ion-header-bar>
+
+
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-model="condition.supplierId" ng-value="-1"  ng-click="hideSupplyList('不限')">不限</ion-radio>
+                    <ion-radio ng-model="condition.supplierId" ng-repeat="supply in supplysInfo"  ng-value="{{supply.id}}"  ng-click="hideSupplyList(supply.name)">{{supply.name}}</ion-radio>
+                </ion-list>
+            </ion-content>
+
+        </div>
+    </script>
+
+    <!-- 显示 筛选菜单中 进场时间（起） 弹框 -->
+    <script id="start-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime">
+        </onezone-datepicker>
+    </script>
+    <!-- 显示 筛选菜单中 进场时间（止） 弹框 -->
+    <script id="end-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="endTime">
+        </onezone-datepicker>
+    </script>
+
+
+
+
+
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+</ion-view>

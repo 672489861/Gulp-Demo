@@ -1,0 +1,19 @@
+<ion-view view-title="税务发票约定">
+    <ion-content>
+        <ion-list ng-repeat="item in invoiceInfo">
+            <ion-item class="margin-bottom">
+                <h2 class="padding-bottom">{{item.name}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td width="50%" height="25"><span class="note">税务发票类型：</span>{{item.invoiceTypeName}}</td>
+                    </tr>
+                    <tr>
+                        <td height="25"><span class="note">税率（%）：</span>{{item.cess}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

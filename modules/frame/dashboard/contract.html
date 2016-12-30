@@ -1,0 +1,225 @@
+<ion-content scroll="true" class="table" ng-controller="ContractController">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <p class="memo">新签合同额累计{{basis.newSignAmount}}万元，结转合同额累计{{basis.lastAmout}}万元，在建工程合同额累计{{basis.amount}}万元</p>
+
+    <div class="select-wrap">
+        <div class="center">
+            <div class="item-select year">
+                <select ng-model="nowYear" ng-change="showDetailByYear()">
+                    <option ng-repeat="yearObj in yearList" value="{{yearObj.year}}">{{yearObj.year}}</option>
+                </select>
+            </div>
+            <span>年</span>
+
+            <div class="item-select type">
+                <select ng-model="statisticType" ng-init="statisticType='1'"
+                        ng-change="showDetailByType()">
+                    <option value="1">按分公司统计</option>
+                    <option value="2">按地域统计</option>
+                    <option value="3">按工程类型统计-房屋建筑工程</option>
+                    <option value="4">按工程类型统计-交通运输工程</option>
+                    <!--<option value="5">按承包类型</option>
+                    <option value="6">按合同状态</option>-->
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-list">
+        <table class="table col-5">
+            <tr>
+                <th width="35%" class="blue">{{cellName}}</th>
+                <th class="red">合同额</th>
+                <th class="orange">占比</th>
+                <th class="yellow" ng-show="statisticType==1">完成产值</th>
+            </tr>
+            <tr ng-repeat="contract in contractList">
+                <td><p class="company">{{contract.name}}</p></td>
+                <td>{{contract.amount}}</td>
+                <td>{{contract.ratio}}%</td>
+                <td ng-show="statisticType==1">{{contract.reportAmount}}</td>
+            </tr>
+            <tr ng-show="contractList.length==0">
+                <td colspan="4" style="text-align: center;" ng-show="statisticType==1">暂无数据</p></td>
+                <td colspan="3" style="text-align: center;" ng-show="statisticType!=1">暂无数据</p></td>
+            </tr>
+        </table>
+        <!--<table class="table col-3" ng-show="statisticType==5">
+            <tr>
+                <th width="35%" class="blue">
+                    承包类型
+                </th>
+                <th class="red">
+                    合同额
+                </th>
+                <th class="orange">
+                    占比
+                </th>
+            </tr>
+            <tr>
+                <td>施工总承包</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>专业分包</td>
+                <td>21,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>劳务分包</td>
+                <td>28,500</td>
+                <td>25.5%</td>
+            </tr>
+            <tr>
+                <td>分包</td>
+                <td>108,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>总承包</td>
+                <td>17,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>施工总承包</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>专业分包</td>
+                <td>21,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>劳务分包</td>
+                <td>28,500</td>
+                <td>25.5%</td>
+            </tr>
+            <tr>
+                <td>分包</td>
+                <td>108,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>总承包</td>
+                <td>17,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>施工总承包</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>专业分包</td>
+                <td>21,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>劳务分包</td>
+                <td>28,500</td>
+                <td>25.5%</td>
+            </tr>
+            <tr>
+                <td>分包</td>
+                <td>108,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>总承包</td>
+                <td>17,000</td>
+                <td>13%</td>
+            </tr>
+        </table>
+        <table class="table col-3" ng-show="statisticType==6">
+            <tr>
+                <th width="35%" class="blue">
+                    按合同状态
+                </th>
+                <th class="red">
+                    合同额
+                </th>
+                <th class="orange">
+                    占比
+                </th>
+            </tr>
+            <tr>
+                <td>在建</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>终止</td>
+                <td>21,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>完工</td>
+                <td>28,500</td>
+                <td>25.5%</td>
+            </tr>
+            <tr>
+                <td>暂停</td>
+                <td>108,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>终止</td>
+                <td>17,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>在建</td>
+                <td>28,500</td>
+                <td>25%</td>
+            </tr>
+            <tr>
+                <td>完工</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>在建</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>终止</td>
+                <td>21,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>完工</td>
+                <td>28,500</td>
+                <td>25.5%</td>
+            </tr>
+            <tr>
+                <td>暂停</td>
+                <td>108,000</td>
+                <td>15.5%</td>
+            </tr>
+            <tr>
+                <td>终止</td>
+                <td>17,000</td>
+                <td>13%</td>
+            </tr>
+            <tr>
+                <td>在建</td>
+                <td>28,500</td>
+                <td>25%</td>
+            </tr>
+            <tr>
+                <td>完工</td>
+                <td>120,000</td>
+                <td>15.5%</td>
+            </tr>
+        </table>-->
+    </div>
+
+    <link href="modules/frame/dashboard/css/table.css" rel="stylesheet">
+</ion-content>

@@ -1,0 +1,111 @@
+<ion-view view-title="设备检验记录详细">
+
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{deviceRecordInfo.number}}</h3>
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showBaseInfo = true;"
+                 ng-click="showBaseInfo=!showBaseInfo">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showBaseInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+
+            <div class="item nopadding-vertical" ng-show="showBaseInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">设备名称</td>
+                        <td align="right">{{deviceRecordInfo.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>型号/规格</td>
+                        <td align="right">{{deviceRecordInfo.specifications}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showRemindInfo = true;"
+                 ng-click="showRemindInfo=!showRemindInfo">
+                <p>检验信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showRemindInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showRemindInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">检验日期</td>
+                        <td align="right">{{deviceRecordInfo.inspectionTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>检验单位</td>
+                        <td align="right">{{deviceRecordInfo.unit}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showCheckEdit = true;"
+                 ng-click="showCheckEdit=!showCheckEdit">
+                <p>检验处理</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showCheckEdit?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showCheckEdit">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td>检验时间</td>
+                        <td align="right">{{deviceRecordInfo.inspectionTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>检验单位</td>
+                        <td align="right">{{deviceRecordInfo.unit}}</td>
+                    </tr>
+                    <tr>
+                        <td>检验费用</td>
+                        <td align="right">{{deviceRecordInfo.cost}}</td>
+                    </tr>
+                    <tr>
+                        <td>检验结论</td>
+                        <td align="right">
+                            <spam>{{deviceRecordInfo.conclusion}}</spam>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showAttachmentInfo = true;"
+                 ng-click="showAttachmentInfo=!showAttachmentInfo" ng-click="showAttachmentInfo">
+                <p>附件信息</p>
+                <i class="icon ion-ios-arrow-up"
+                   ng-class="showAttachmentInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-grid nopadding" ng-show="showAttachmentInfo" style="background-color: white">
+                <div ng-repeat="attach in attaches" ng-click="download(attach)">
+                    <img src="{{attach.name|showAttachIcon}}">
+                    <h4 class="padding-top-small">{{attach.typeId|showAttachType}}</h4>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+    <!-- 多个下拉内容，共用一个背景 -->
+    <div class="yt-action-backdrop" ng-class="checkResault ? 'active':''"
+         ng-show="checkResault"
+         ng-click="close()"></div>
+
+    <!-- 设备类别 -->
+    <div class="yt-action-wrapper-bottom" ng-show="checkResault" ng-class="checkResault ? 'yt-action-up':''">
+        <div class="yt-action">
+            <ion-list>
+                <ion-radio ng-click="close()">合格</ion-radio>
+                <ion-radio ng-click="close()">维修再检</ion-radio>
+                <ion-radio ng-click="close()">报废</ion-radio>
+                <ion-radio ng-click="close()">停用</ion-radio>
+            </ion-list>
+        </div>
+    </div>
+
+    <!-- 检验时间 -->
+    <script id="start-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime">
+        </onezone-datepicker>
+    </script>
+</ion-view>

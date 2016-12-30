@@ -1,0 +1,40 @@
+<ion-view view-title="项目奖励">
+    <ion-content>
+        <div class="list">
+            <div class="item">
+                年度
+                <span class="item-note">{{award.year}}</span>
+            </div>
+            <div class="item">
+                级别
+                <span class="item-note">{{award.level}}</span>
+            </div>
+            <div class="item">
+                奖项
+                <span class="item-note">{{award.type}}</span>
+            </div>
+            <div class="item">
+                获奖内容
+                <span class="item-note">{{award.content}}</span>
+            </div>
+            <div class="item">
+                获奖时间
+                <span class="item-note">{{award.date}}</span>
+            </div>
+            <div class="item">
+                原件存放地
+                <span class="item-note">{{award.orgName}}</span>
+            </div>
+            <div class="item item-icon-right item-link" ng-click="attachmentShow()">
+                附件
+                <i class="icon" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-grid nopadding" ng-show="attachment">
+                <div ng-repeat="attach in attaches" ng-click="download(attach)">
+                    <img src="{{attach.name|showAttachIcon}}">
+                    <p>{{attach.name}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

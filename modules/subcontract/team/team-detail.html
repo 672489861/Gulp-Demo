@@ -1,0 +1,95 @@
+<ion-view view-title="班组详细">
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{teamDetail.name}}</h3>
+
+        <p class="nomargin text-center padding-bottom light-bg">班组编号：{{teamDetail.number}}</p>
+
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right"
+                 ng-click="showProjectInfo=!showProjectInfo" ng-init="showProjectInfo = true;">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showProjectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showProjectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">工种</td>
+                        <td align="right">{{teamDetail.worktypeName}}</td>
+                    </tr>
+                    <tr>
+                        <td>人数</td>
+                        <td align="right">{{teamDetail.count}}</td>
+                    </tr>
+                    <tr>
+                        <td>分包单位</td>
+                        <td align="right">{{teamDetail.merchantName}}</td>
+                    </tr>
+                    <tr>
+                        <td>组长姓名</td>
+                        <td align="right">{{teamDetail.leaderName}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{teamDetail.telphone}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right"
+                 ng-click="showWorkContent=!showWorkContent" ng-init="showWorkContent = true;">
+                <p>施工内容</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showWorkContent?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="empty-info" ng-if="teamWorkContentDetail.length == 0 ">
+                <i class="ion-android-alert"></i>
+                <p>还未分配施工内容！</p>
+            </div>
+            <div class="item " ng-show="showWorkContent" ng-repeat="workContent in teamWorkContentDetail">
+                <h2 class="padding-bottom-small">{{workContent.content}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td><span class="note">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：</span>{{workContent.unit}}
+                        </td>
+                        <td height="25"><span class="note">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：</span>{{workContent.price}}
+                            元
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="note">工&nbsp;&nbsp;作&nbsp;&nbsp;量：</span>{{workContent.quantities}}</td>
+                        <td height="25"><span class="note">单项金额：</span>{{workContent.total}} 元</td>
+                    </tr>
+                    <tr>
+                        <td><span class="note">累计计量金额：</span>{{workContent.completeAmount}} 元</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ion-content>
+    <style type="text/css">
+        .head-title {
+            margin: 0;
+            padding: 0;
+            height: 44px;
+            line-height: 44px;
+            font-size: 16px;
+            padding-left: 10px;
+            font-weight: bold;
+        }
+
+        .table-detail {
+            width: 100%;
+        }
+
+        .table-detail tbody tr td {
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .note {
+            color: #aaa;
+        }
+    </style>
+</ion-view>

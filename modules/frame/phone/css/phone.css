@@ -1,0 +1,15 @@
+.font-nomarl {
+    font-weight: normal !important;
+}
+
+.list .item.item-avatar-left:nth-child(2) {
+    border-top: 0;
+}
+
+.list.users-list .item:last-child {
+    border-bottom: 0;
+}
+
+.item .badge {
+    top: 35px !important;
+}

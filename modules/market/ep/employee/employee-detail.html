@@ -1,0 +1,146 @@
+<ion-view view-title="人员信息详细">
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="baseInfoShow()">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="baseInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="baseInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%" class="has-photo" rowspan="5">
+                            <img src="{{emp.photourl}}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名： &nbsp;&nbsp;&nbsp;&nbsp;{{emp.realName}}</td>
+                    </tr>
+                    <tr>
+                        <td align="">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别： &nbsp;&nbsp;&nbsp;&nbsp;{{emp.sex}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄： &nbsp;&nbsp;&nbsp;&nbsp;{{emp.age==null?'':emp.age+'岁'}}</td>
+                    </tr>
+                    <tr>
+                        <td align="">出生日期： &nbsp;&nbsp;&nbsp;&nbsp;{{emp.birthday}}</td>
+                    </tr>
+                    <tr>
+                        <td>身份证号</td>
+                        <td align="right">{{emp.idcard}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{emp.telephone}}</td>
+                    </tr>
+                    <tr>
+                        <td>文化程度</td>
+                        <td align="right">{{emp.education}}</td>
+                    </tr>
+                    <tr>
+                        <td>所学专业</td>
+                        <td align="right">{{emp.major}}</td>
+                    </tr>
+                    <tr>
+                        <td>学历证书附件</td>
+                        <td align="right" class="link" ng-click="viewAttachDetail()"><i class="icon ion-ios-arrow-right"
+                                                                                        ng-show="attaches.length>0"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="workInfoShow()">
+                <p>工作与参保信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="workInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="workInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">参加工作时间</td>
+                        <td align="right"> {{emp.workdate}}</td>
+                    </tr>
+                    <tr>
+                        <td>参保情况</td>
+                        <td align="right">{{emp.isinsuredText}}</td>
+                    </tr>
+                    <tr>
+                        <td>参保时间</td>
+                        <td align="right">{{emp.insurebegindate}}</td>
+                    </tr>
+                    <tr>
+                        <td>社保号码</td>
+                        <td align="right">{{emp.insurecode}}</td>
+                    </tr>
+                    <tr>
+                        <td>劳动合同存放地</td>
+                        <td align="right">{{emp.contractOrgName}}</td>
+                    </tr>
+                    <tr>
+                        <td>所属公司</td>
+                        <td align="right">{{emp.orgName}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="qualificationShow()">
+                <p>执业资格证书</p>
+                <i class="icon ion-ios-arrow-up" ng-class="qualification?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="qualification">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="certificate in certificates" ng-click="viewCertificateDetail(certificate)">
+                        <td>{{certificate.type}}{{certificate.major}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="technicalTitleShow()">
+                <p>职称证书</p>
+                <i class="icon ion-ios-arrow-up" ng-class="technicalTitle?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="technicalTitle">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="title in titles" ng-click="viewTitleDetail(title)">
+                        <td>{{title.name}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectShow()">
+                <p>工作业绩信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="project?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="project">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-click="viewPrjDetail(project.id)" ng-repeat="project in projects">
+                        <td width="35%">{{project.name}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ion-content>
+
+    <style type="text/css">
+        .has-photo {
+            text-align: left;
+            vertical-align: bottom;
+            padding: 0 !important;
+        }
+
+        .has-photo img {
+            max-width: 85%;
+            height: 130px;
+        }
+    </style>
+</ion-view>
+

@@ -1,0 +1,193 @@
+<ion-view view-title="总承包合同" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <h3 class="page-detail-title font-bold text-center">建设工程施工总承包合同</h3>
+        <p class="nomargin text-center padding-bottom light-bg">合同编号：{{primaryInfo.displayId}}</p>
+
+        <div class="list">
+            <div class="item item-title">
+                <p class="f14 font-bold">发包方：{{primaryInfo.merchantName}}</p>
+                <p class="f14 font-bold">承包方：{{primaryInfo.ownerOrgName}}</p>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showProjectInfo = true;"
+                 ng-click="showProjectInfo=!showProjectInfo">
+                <p>工程概况</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showProjectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showProjectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、工程名称</td>
+                        <td align="right">{{primaryInfo.projectName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、工程地点</td>
+                        <td align="right">{{primaryInfo.detailAddress}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、资金来源</td>
+                        <td align="right">{{primaryInfo.fundSourceName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">4、责任人</td>
+                        <td align="right">{{primaryInfo.responsiblePersonName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">5、项目经理</td>
+                        <td align="right">{{primaryInfo.manager}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showWorkTime = true;"
+                 ng-click="showWorkTime=!showWorkTime">
+                <p>工期</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showWorkTime?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showWorkTime">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、开工时间</td>
+                        <td align="right">{{primaryInfo.beginDate}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、竣工时间</td>
+                        <td align="right">{{primaryInfo.endDate}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、总日历天数</td>
+                        <td align="right">{{primaryInfo.totalDays}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showWorkMoney = true;"
+                 ng-click="showWorkMoney=!showWorkMoney">
+                <p>合同价款与签订时间</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showWorkMoney?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showWorkMoney">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、合同金额</td>
+                        <td align="right">{{primaryInfo.amount}} 万元</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" style="padding-left: 21px">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;写</td>
+                        <td align="right">{{formatMoney}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、计价方式</td>
+                        <td align="right">{{primaryInfo.valution}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、付款方式</td>
+                        <td align="right">{{primaryInfo.payType}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">4、签订时间</td>
+                        <td align="right">{{primaryInfo.signDate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showProjectDetail = true;"
+                 ng-click="showProjectDetail=!showProjectDetail">
+                <p>工程详细信息</p>
+                <i class="icon ion-ios-arrow-up"
+                   ng-class="showProjectDetail?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showProjectDetail">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、承包形式</td>
+                        <td align="right">{{primaryInfo.formName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、投标情况</td>
+                        <td align="right">{{primaryInfo.bidName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">3、工程类别</td>
+                        <td align="right">{{primaryInfo.workCategoryName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">4、结构形式</td>
+                        <td align="right">{{primaryInfo.subWorkCategoryName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">5、层数</td>
+                        <td align="right">地上{{primaryInfo.overGround}}层，地下{{primaryInfo.underGround}}层</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">6、结构</td>
+                        <td align="right">{{primaryInfo.height}}M（高度），{{primaryInfo.span}}M（跨度）</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">7、数量</td>
+                        <td align="right">{{primaryInfo.quantity}} 平方米</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showQualityInfo = true;"
+                 ng-click="showQualityInfo=!showQualityInfo">
+                <p>质量/安全、文明管理</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showQualityInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showQualityInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">1、质量目标</td>
+                        <td align="right">{{primaryInfo.quality}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">2、安全文明目标</td>
+                        <td align="right">{{primaryInfo.security}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showRemark = true;"
+                 ng-show="showRemark&&primaryInfo.memo" ng-click="showRemark=!showRemark">
+                <p>备注信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showRemark?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showRemark&&primaryInfo.memo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td colspan="2">{{primaryInfo.memo}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showAttachment = true;"
+                 ng-click="showAttachment=!showAttachment">
+                <p>附件信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showAttachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-light item-grid nopadding" ng-show="showAttachment" style="margin-top: 1px">
+                <div ng-repeat="attach in attaches" ng-click="downloadAttach(attach)">
+                    <img src="{{attach.name|showAttachIcon}}">
+                    <p>{{attach.name}}<br/>({{attach.fileSize}}) </p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

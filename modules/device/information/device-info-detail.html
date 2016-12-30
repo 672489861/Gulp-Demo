@@ -1,0 +1,68 @@
+<ion-view view-title="现场设备详细">
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{deviceInfo.number}}</h3>
+        <div class="list">
+            <div class="item item-divider item-divider-title">
+                <p>基本信息</p>
+            </div>
+            <div class="item nopadding-vertical">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">设备名称</td>
+                        <td align="right">{{deviceInfo.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>设备类别</td>
+                        <td align="right">{{deviceInfo.category}}</td>
+                    </tr>
+                    <tr>
+                        <td>型号/规格</td>
+                        <td align="right">{{deviceInfo.specifications}}</td>
+                    </tr>
+                    <tr>
+                        <td>生产厂商</td>
+                        <td align="right">{{deviceInfo.manufacturer}}</td>
+                    </tr>
+                    <tr>
+                        <td>设备标识</td>
+                        <td align="right">{{deviceInfo.identify}}</td>
+                    </tr>
+                    <tr>
+                        <td>设备来源</td>
+                        <td align="right">{{deviceInfo.source}}</td>
+                    </tr>
+                    <tr>
+                        <td>设备提供单位</td>
+                        <td align="right">{{deviceInfo.provide}}</td>
+                    </tr>
+                    <tr>
+                        <td>进场时间</td>
+                        <td align="right">{{deviceInfo.intime}}</td>
+                    </tr>
+                    <tr>
+                        <td>退场时间</td>
+                        <td align="right">{{deviceInfo.outtime}}</td>
+                    </tr>
+                    <tr>
+                        <td>启用时间</td>
+                        <td align="right">{{deviceInfo.starttime}}</td>
+                    </tr>
+                    <tr>
+                        <td>停用时间</td>
+                        <td align="right">{{deviceInfo.stoptime}}</td>
+                    </tr>
+                    <tr>
+                        <td>使用天数</td>
+                        <td align="right">{{deviceInfo.useday}}</td>
+                    </tr>
+                    <tr>
+                        <td>设备状态</td>
+                        <td align="right">{{deviceInfo.statusName}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

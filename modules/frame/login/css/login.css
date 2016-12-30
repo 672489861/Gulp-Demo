@@ -1,0 +1,81 @@
+﻿/* 登录页 */
+.login ion-content {
+    background-image: url("../img/login_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 75px;
+}
+
+.login .scroll {
+    height: 100%;
+}
+
+.login-content {
+    width: 320px;
+    margin: 0 auto;
+}
+
+.logo {
+    width: 105px;
+}
+
+.login-form {
+    margin-top: 50px;
+}
+
+.login-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    font-size: 11px;
+    color: #999;
+}
+
+/* 顶部 登录页 */
+.login-top {
+    height: 228px;
+    width: 100%;
+    background-image: url("../img/login_top_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    padding: 46px 0;
+    color: white;
+}
+
+.login-top h4 {
+    color: #fff;
+    font-size: 22px;
+}
+
+.logo {
+    width: 105px;
+    height: 105px;
+}
+
+.login-main input[type = text],
+.login-main input[type = password] {
+    font-size: 16px;
+    line-height: 18px;
+    height: 45px;
+}
+
+.login-main i {
+    font-size: 32px;
+    padding-right: 20px !important;
+}
+
+.login-info {
+    padding: 14px;
+}
+
+.login-info p,
+.login-info p a {
+    color: #999;
+}
+
+.login-info button {
+    font-size: 21px;
+    margin-top: 30px !important;
+}

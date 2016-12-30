@@ -1,0 +1,28 @@
+<ion-view view-title="资质信息">
+    <ion-content>
+        <div class="list">
+            <div class="item">
+                资质名称
+                <span class="item-note">{{merchantQualificationName}}</span>
+            </div>
+            <div class="item">
+                资质证书号
+                <span class="item-note">{{merchantQualificationNumber}}</span>
+            </div>
+            <div class="item">
+                资质等级
+                <span class="item-note">{{merchantQualificationLevelName}}</span>
+            </div>
+            <div class="item item-icon-right item-link" ng-click="attachmentShow()">
+                附件
+                <i class="icon" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item item-grid nopadding" ng-show="attachment">
+                <div ng-if="merchantQualificationAttachName!=''&&merchantQualificationUrl!=''" ng-click="download({{attach}})">
+                    <img ng-src="{{attach.name | showAttachIcon}}">
+                    <p>{{attach.name}}<br>{{attach.fileSize}}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,242 @@
+<ion-view view-title="项目信息">
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{project.name}}</h3>
+        <p class="nomargin text-center padding-bottom light-bg">项目识别码:{{project.code}}</p>
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectInfoShow()">
+                <p>项目信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">项目所属公司</td>
+                        <td align="right">{{project.orgName}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">合同备案号</td>
+                        <td align="right">{{project.contractRecord}}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">计价文件号</td>
+                        <td align="right">{{project.pricingDocument}}</td>
+                    </tr>
+                    <tr>
+                        <td>项目所在地</td>
+                        <td align="right">{{project.province}}{{project.city}}{{project.address}}</td>
+                    </tr>
+                    <tr>
+                        <td>项目性质</td>
+                        <td align="right">{{project.projectProperty}}</td>
+                    </tr>
+                    <tr>
+                        <td>是否竣工</td>
+                        <td align="right">{{project.isCompletedText}}</td>
+                    </tr>
+                    <tr>
+                        <td>开工时间</td>
+                        <td align="right">{{project.starttime}}</td>
+                    </tr>
+                    <tr>
+                        <td>竣工时间</td>
+                        <td align="right">{{project.endtime}}</td>
+                    </tr>
+                    <tr>
+                        <td>建筑类别</td>
+                        <td align="right">
+                            {{project.buildingtypeA}}{{project.buildingtypeBid>0?':'+project.buildingtypeB:''}}{{project.buildingtypeCid>0?':'+project.buildingtypeC:''}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>承包形式</td>
+                        <td align="right">
+                            {{project.contractmodeA}}{{project.contractmodeBid>0?':'+project.contractmodeB:''}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>结构形式</td>
+                        <td align="right">
+                            {{project.structuralFormsA}}{{project.structuralformsBid>0?':'+project.structuralFormsB:''}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>合同金额（万元）</td>
+                        <td align="right">{{project.contractamount}}</td>
+                    </tr>
+                    <tr>
+                        <td>资金来源</td>
+                        <td align="right">{{project.fundingSource}}</td>
+                    </tr>
+                    <tr>
+                        <td>结算金额（万元）</td>
+                        <td align="right">{{project.settlementamount}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="companyInfoShow()">
+                <p>参建单位</p>
+                <i class="icon ion-ios-arrow-up" ng-class="companyInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="companyInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">建设单位名称</td>
+                        <td align="right"> {{project.constructorcompany}}</td>
+                    </tr>
+                    <tr>
+                        <td>业主代表姓名</td>
+                        <td align="right">{{project.representative}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{project.representativetelephone}}</td>
+                    </tr>
+                    <tr>
+                        <td>设计单位名称</td>
+                        <td align="right">{{project.designcompany}}</td>
+                    </tr>
+                    <tr>
+                        <td>设计代表姓名</td>
+                        <td align="right">{{project.designer}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{project.designertelephone}}</td>
+                    </tr>
+                    <tr>
+                        <td>监理单位名称</td>
+                        <td align="right">{{project.supervisorcompany}}</td>
+                    </tr>
+                    <tr>
+                        <td>总监姓名</td>
+                        <td align="right">{{project.chiefengineer}}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td align="right">{{project.chiefengineertelephone}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="projectOptionShow()">
+                <p>工程参数</p>
+                <i class="icon ion-ios-arrow-up" ng-class="projectOption?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="projectOption">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="param in params">
+                        <td width="35%">{{param.paramChinese}}{{param.paramUnit!=''?'('+param.paramUnit+')':''}}</td>
+                        <td align="right"> {{param.paramValue}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="attachmentShow()">
+                <p>附件</p>
+                <i class="icon ion-ios-arrow-up" ng-class="attachment?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="attachment">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="attach in attaches">
+                        <td width="35%">{{($index+1)|prjAttachType}}</td>
+                        <td align="right" class="link" ng-click="viewAttachDetail(attach)"><span class="item-note">{{attach.length}} 张</span><i
+                                class="icon ion-ios-arrow-right" ng-show="{{attach.length>0}}"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="awardShow()">
+                <p>项目奖励信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="award?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="award">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="award in awards" ng-click="viewAwardDetail(award)">
+                        <td>{{award.year}}{{award.level}}{{award.type}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="punishShow()">
+                <p>项目惩罚信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="punish?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="punish">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-repeat="punish in punishes" ng-click="viewPunishDetail(punish)">
+                        <td>{{punish.content}}</td>
+                        <td align="right" class="link"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item item-divider item-divider-title item-icon-right" ng-click="employeeShow()">
+                <p>项目管理人员信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="employee?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="employee">
+                <table class="table-row">
+                    <tbody>
+                    <tr ng-click=viewEmpDetail(project.managerid)>
+                        <td width="35%">项目经理</td>
+                        <td align="right" class="link">{{project.manager}}<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <!--<tr>
+                        <td width="50%">项目经理执业资格证书</td>
+                        <td align="right" class="link" ui-sref="punish-detail"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>-->
+                    <tr ng-click=viewEmpDetail(project.technicaldirectorid)>
+                        <td width="35%">技术负责人</td>
+                        <td align="right" class="link">{{project.director}}<i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <!--<tr>
+                        <td width="50%">技术负责人职称证书</td>
+                        <td align="right" class="link" ui-sref="technical-title-detail"><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>-->
+                    <tr ng-click=viewEmpDetail(project.costestimatorid)>
+                        <td width="35%">造价员</td>
+                        <td align="right" class="link">{{project.costestimator}}<i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    <tr ng-click=viewEmpDetail(project.qualityinspectorid)>
+                        <td width="35%">质量员</td>
+                        <td align="right" class="link">{{project.qualityinspector}}<i
+                                class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ng-click=viewEmpDetail(project.safetysupervisorid)>
+                        <td width="35%">安全员</td>
+                        <td align="right" class="link">{{project.safetysupervisor}}<i
+                                class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ng-click=viewEmpDetail(project.constructioncrewid)>
+                        <td width="35%">施工员</td>
+                        <td align="right" class="link">{{project.constructioncrew}}<i
+                                class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr ng-click=viewEmpDetail(project.materialstaffid)>
+                        <td width="35%">材料员</td>
+                        <td align="right" class="link">{{project.materialstaff}}<i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    <tr ng-click=viewEmpDetail(project.dataprocessorid)>
+                        <td width="35%">资料员</td>
+                        <td align="right" class="link">{{project.dataprocessor}}<i class="icon ion-ios-arrow-right"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

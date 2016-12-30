@@ -1,0 +1,47 @@
+<ion-view view-title="选择项目部" class="choose-project" hide-back-button="true">
+
+    <ion-nav-buttons side="left">
+        <button class="button button-icon ion-ios-arrow-left header-item" ng-click="goBack()"
+                nav-direction="back"></button>
+    </ion-nav-buttons>
+
+    <ion-header-bar class="bar-subheader item-input-inset bar-stable">
+        <label class="item-input-wrapper light-bg">
+            <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+            <form ng-submit="search()">
+                <input type="search" placeholder="搜索项目部名称" ng-focus="entering = true" ng-blur="entering = false"
+                       ng-model="searchText">
+            </form>
+        </label>
+        <i class="icon ion-ios-close placeholder-icon clear-search" ng-show="entering"
+           ng-click="clearSearchText()"></i>
+    </ion-header-bar>
+
+    <ion-content class="has-footer">
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && projects.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+        <ion-checkbox ng-model="project.checked" ng-value="{{project.checked}}" ng-repeat="project in projects">
+            {{project.name}}
+        </ion-checkbox>
+
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <div class="bar bar-footer">
+        <button class="button" ng-click="goBack()">取消</button>
+        <button class="button button-positive" ng-click="confirmChoose()">确定</button>
+    </div>
+
+    <style>
+        .choose-project .bar-footer .button {
+            width: 48%;
+        }
+    </style>
+</ion-view>

@@ -1,0 +1,84 @@
+<ion-view view-title="抽查情况" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()"></button>
+    </ion-nav-buttons>
+
+    <ion-content scroll="false" class="check-random-info-edit">
+        <!-- 固定显示区 开始 -->
+        <table class="full-width">
+            <thead>
+            <td><p>序号</p></td>
+            <td><p>检查内容</p></td>
+            <td><p>抽查情况</p></td>
+            </thead>
+        </table>
+        <!-- 固定显示区 结束 -->
+
+        <!-- 可滚动区 开始 -->
+        <ion-scroll class="scroll">
+            <table class="full-width">
+                <tbody>
+                <tr ng-repeat="item in info">
+                    <td width="15%"><p ng-bind-html="item.spotContentCode | trustHtml"></p></td>
+                    <td class="left"><p ng-bind-html="item.spotContentName | trustHtml"></p></td>
+                    <td rowspan="{{item.rowspan}}" ng-if="item.rowspan > 0" width="20%"><p><a>{{item.spotCheckName}}</a></p></td>
+                </tr>
+                </tbody>
+            </table>
+        </ion-scroll>
+        <!-- 可滚动区 结束 -->
+    </ion-content>
+
+    <style type="text/css">
+        /* 添加安全检查 抽查情况 开始 */
+        .check-random-info-edit ion-scroll.scroll {
+            position: absolute !important;
+            top: 31px !important;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .check-random-info-edit tr td {
+            border-right: 1px solid #4d4d4d;
+            border-bottom: 1px solid #4d4d4d;
+            padding: 5px;
+        }
+
+        .check-random-info-edit thead tr td:first-child{
+            width: 15%;
+        }
+
+        .check-random-info-edit thead tr td:last-child{
+            width: 20%;
+        }
+
+        .check-random-info-edit thead td {
+            padding: 5px;
+            padding-bottom: 5px;
+        }
+
+        .check-random-info-edit td:last-child {
+            border-right: none;
+        }
+
+        .check-random-info-edit table tr td:first-child,
+        .check-random-info-edit table tr td:last-child,
+        .check-random-info-edit table tr:first-child td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .check-random-info-edit table tr td.left {
+            text-align: left;
+        }
+
+        .check-random-info-edit td p {
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+
+        /* 添加安全检查 抽查情况 结束 */
+    </style>
+</ion-view>

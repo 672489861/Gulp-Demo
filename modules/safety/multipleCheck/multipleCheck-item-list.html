@@ -1,0 +1,58 @@
+<ion-view view-title="安全检查一览" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()"></button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-upload" ng-click="toStorage('safety/multipleCheck/multipleCheck-item-list')" ng-if="localDataLength > 0">
+            <span style="display: inline-block;position: absolute;background: red;color: white;font-size: 10px;
+            width: 18px;height: 18px;line-height: 18px;border-radius: 50%;top: 0;right: 0;">{{localDataLength}}</span>
+        </button>
+        <button class="button button-icon ion-upload" style="opacity: 0;" ng-if="localDataLength <= 0">
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && itemList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+        <div ng-repeat="item in itemList">
+            <h4 class="card-title text-center">{{item.checkMonth | changeDateToYearMonth}}</h4>
+            <div class="card margin-top" ng-repeat="temp in item.items"
+            ng-click="toItemDetail(temp.id,temp.statusId,'safety/multipleCheck/multipleCheck-item-list')">
+                <div class="item">
+                    <span class="smart-mark calm-bg" ng-if="temp.statusId == 0">已保存</span>
+                    <span class="smart-mark balanced-bg" ng-if="temp.statusId == 1">已提交</span>
+
+                    <p><span class="title">形象进度：</span>{{temp.projectStatus | cut:true:25:'...'}}</p>
+
+                    <p ng-if="temp.spotCount > 0"><span class="title">抽查情况：</span>{{temp.spotCount}}项存在问题</p>
+                    <p ng-if="temp.spotCount == 0"><span class="title">抽查情况：</span>无问题</p>
+
+                    <p class="nomargin"><span class="title">时间：</span>{{temp.checkDate}}</p>
+                </div>
+            </div>
+        </div>
+
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 固定位置 添加按钮 -->
+    <button class="button button-fab button-fab-bottom-right button-positive spin"
+            ng-class="right.checker ? 'on':''" ng-click="toAdd('safety/multipleCheck/multipleCheck-item-list')">
+        <i class="icon ion-plus"></i>
+    </button>
+
+    <style type="text/css">
+        .card-title {
+            /*padding-left: 10px;*/
+            color: #6fb1f2;
+            font-weight: bold;
+        }
+    </style>
+</ion-view>

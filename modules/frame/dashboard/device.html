@@ -1,0 +1,216 @@
+<ion-content scroll="true">
+
+    <!-- 下拉刷新 -->
+    <ion-refresher on-refresh="refreshListDataByD()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                   refreshing-icon="ion-loading-b"></ion-refresher>
+
+    <div class="cb-select" ng-click="switchOrgListByD()">
+        <span>{{moduleByD.orgNameByD}}</span>
+        <i class="icon ion-arrow-down-b"></i>
+    </div>
+
+    <ion-list class="ca-list" ng-show="moduleByD.m12001" >
+        <ion-item ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">自有设备</p>
+
+                <div class="arrow-box arrow-blue">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && ownDLsit.length > 0">
+                <p ng-repeat="ownD in ownDLsit">{{ownD.deviceName}}设备</p>
+            </div>
+        </ion-item>
+        <ion-item ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">租赁设备</p>
+
+                <div class="arrow-box arrow-lightBlue">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && rentDLsit.length > 0">
+                <div ng-repeat="rentD in rentDLsit">
+                    <p ng-click="chooseSupplierByRent($index)">{{rentD.rentName}}供应商 <i class="ion-android-arrow-dropdown"></i></p>
+                    <div class="sub-list-box" ng-show="supplierByRent[$index]">
+                        <p ng-repeat="detail in rentD.detail">{{detail.deviceName}}</p>
+                    </div>
+                </div>
+            </div>
+        </ion-item>
+        <ion-item ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">采购设备</p>
+
+                <div class="arrow-box arrow-orange">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && purchaseDLsit.length > 0">
+                <div ng-repeat="purchaseD in purchaseDLsit">
+                    <p ng-click="chooseSupplierByPur($index)">{{purchaseD.rentName}}供应商 <i class="ion-android-arrow-dropdown"></i></p>
+                    <div class="sub-list-box" ng-show="supplierByPur[$index]">
+                        <p ng-repeat="detail in purchaseD.detail">{{detail.deviceName}}</p>
+                    </div>
+                </div>
+            </div>
+        </ion-item>
+        <ion-item ng-init="item.selected=false">
+            <ion-item ng-click="item.selected =!item.selected">
+                <p class="fl">外单位自带</p>
+
+                <div class="arrow-box arrow-green">
+                    <img src="modules/frame/dashboard/img/arrow-down.svg">
+                </div>
+            </ion-item>
+            <div class="list-box" ng-show="item.selected && outCompanyDLsit.length > 0">
+                <div ng-repeat="outCompanyD in outCompanyDLsit">
+                    <p ng-click="chooseSupplierByCom($index)">{{outCompanyD.rentName}}单位 <i class="ion-android-arrow-dropdown"></i></p>
+                    <div class="sub-list-box" ng-show="supplierByCom[$index]">
+                        <p ng-repeat="detail in outCompanyD.detail">{{detail.deviceName}}</p>
+                    </div>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+
+    <!-- 公共背景层 如果有多个弹框共用一个背景层 -->
+    <div class="yt-action-backdrop" ng-class="showOrgListByD ? 'active':''" ng-show="showOrgListByD"
+         ng-click="switchOrgListByD()"></div>
+
+    <!-- 切换组织机构-->
+    <!-- yt-action-wrapper-top 一定要和has-header 组合用，否则缺少top值 -->
+    <div class="yt-action-wrapper-top has-header" ng-show="showOrgListByD" ng-class="showOrgListByD ? 'yt-action-up':''">
+        <div class="yt-action cb-action">
+            <ion-list>
+                <ion-item ng-repeat="orgByD in moduleByD.orgListByD" ng-click="changeOrgByD(orgByD.id)" nav-direction="enter">{{orgByD.name}}</ion-item>
+            </ion-list>
+        </div>
+    </div>
+</ion-content>
+<style type="text/css">
+    .item {
+        border: 0;
+    }
+
+    .ca-list .list > .item {
+        border: 0;
+        margin: 15px;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .ca-list .list > .item .item {
+        border-radius: 10px;
+    }
+
+    .ca-list p {
+        margin: 0;
+    }
+
+    .ca-list .fl {
+        float: left;
+        width: 80%;
+    }
+
+    .ca-list .arrow-box {
+        float: right;
+        position: relative;
+        width: 23px;
+        height: 23px;
+        overflow: hidden;
+    }
+
+    .ca-list .arrow-box img {
+        position: absolute;
+        left: -24px;
+        border-right: 24px solid transparent;
+    }
+
+    .ca-list .arrow-blue img {
+        -webkit-filter: drop-shadow(24px 0 #78a3ed);
+        filter: drop-shadow(24px 0 #78a3ed);
+    }
+
+    .ca-list .arrow-lightBlue img {
+        -webkit-filter: drop-shadow(24px 0 #78dbed);
+        filter: drop-shadow(24px 0 #78dbed);
+    }
+
+    .ca-list .arrow-orange img {
+        -webkit-filter: drop-shadow(24px 0 #fba722);
+        filter: drop-shadow(24px 0 #fba722);
+    }
+
+    .ca-list .arrow-green img {
+        -webkit-filter: drop-shadow(24px 0 #6bddb4);
+        filter: drop-shadow(24px 0 #6bddb4);
+    }
+
+    .ca-list .arrow-yellow img {
+        -webkit-filter: drop-shadow(24px 0 #e1e069);
+        filter: drop-shadow(24px 0 #e1e069);
+    }
+
+    .ca-list .arrow-red img {
+        -webkit-filter: drop-shadow(24px 0 #f87d7d);
+        filter: drop-shadow(24px 0 #f87d7d);
+    }
+
+    .ca-list .list-box {
+        clear: both;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #fff;
+        overflow: hidden;
+        zoom: 1;
+    }
+
+    .ca-list .list-box p {
+        border-top: 1px dotted #e5e5e5;
+        line-height: 40px;
+        font-size: 12px;
+        color: #999;
+    }
+
+    .ca-list .list-box p:first-child {
+        border: 0;
+    }
+
+    .ca-list .list-box .more {
+        float: right;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .ca-list .list-box .more:hover {
+        color: #387ef5;
+    }
+
+    .ca-list .list-box .more span {
+        font-family: "宋体";
+    }
+
+    .ca-list .sub-list-box p{
+        padding-left: 20px;
+        border-width: 0;
+    }
+
+    .ca-list {
+    }
+
+    .cb-select{
+        height: 45px;
+        line-height: 45px;
+        border-bottom:1px solid #f2f2f2;
+        background-color: #fff;
+        text-align: center;
+        position: relative;
+        z-index: 12;
+    }
+
+    .cb-action{
+        max-height: none;
+    }
+</style>

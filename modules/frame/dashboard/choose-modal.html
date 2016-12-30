@@ -1,0 +1,135 @@
+<ion-view view-title="选择管理内容" class="choose" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button button-icon ion-ios-arrow-left header-item" ng-click="goBack()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <ion-content class="has-footer">
+        <h4 ng-show="type < 3"><span>企业管理</span></h4>
+
+        <div ng-show="type < 3" class="choose-wrap" ng-init="con.selected=true"
+             ng-repeat="wrapModule in businessModules">
+            <div class="row sub-title">
+                <div class="col">
+                    <ion-checkbox ng-value="{{wrapModule.checked}}" ng-model="wrapModule.checked"
+                                  ng-click="clickWrapModule(wrapModule,'businessModules')">{{wrapModule.moduleName}}
+                    </ion-checkbox>
+                </div>
+                <div class="col" ng-click="con.selected =!con.selected"><i
+                        class="ion-chevron-down arrow-down"></i></div>
+            </div>
+            <div class="choose-content" ng-show="con.selected">
+                <div ng-repeat="subModule in wrapModule.subModules" class="row">
+                    <div class="col" ng-repeat="module in subModule">
+                        <ion-checkbox ng-value="{{module.checked}}" ng-model="module.checked"
+                                      ng-click="clickSubModule(wrapModule,'businessModules')">
+                            {{module.moduleName}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4><span>项目管理</span></h4>
+
+        <div class="choose-wrap" ng-init="con.selected=true" ng-repeat="projectModule in projectModules">
+            <div class="row sub-title">
+                <div class="col">
+                    <ion-checkbox ng-value="{{projectModule.checked}}" ng-model="projectModule.checked"
+                                  ng-click="clickWrapModule(projectModule,'projectModules')">
+                        {{projectModule.moduleName}}
+                    </ion-checkbox>
+                </div>
+                <div class="col" ng-click="con.selected =!con.selected"><i
+                        class="ion-chevron-down arrow-down"></i></div>
+            </div>
+            <div class="choose-content" ng-show="con.selected">
+                <div ng-repeat="subModule in projectModule.subModules" class="row">
+                    <div class="col" ng-repeat="module in subModule">
+                        <ion-checkbox ng-value="{{module.checked}}" ng-model="module.checked"
+                                      ng-click="clickSubModule(projectModule,'projectModules',module)">
+                            {{module.moduleName}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ion-content>
+    <div class="bar bar-footer">
+        <button class="button" ng-click="closeModal()">取消</button>
+        <button class="button button-positive" ng-click="save()">确定</button>
+    </div>
+
+    <style>
+        .choose .scroll-content {
+            background-color: #fff;
+            overflow: auto;
+        }
+
+        .choose h4 {
+            margin: 0;
+            padding: 0 0 0 15px;
+            background-color: #f7f7f7;
+            line-height: 40px;
+            font-family: "Microsoft YaHei";
+            font-size: 16px;
+        }
+
+        .choose h4 span{
+            border-left: 3px solid #387ef5;
+            padding-left: 10px;
+            color: #387ef5;
+            /* font-weight: bold; */
+        }
+
+        .choose .col, .row {
+            padding: 0;
+        }
+
+        .choose .row + .row {
+            margin: 0;
+        }
+
+        .choose .bar-footer .button {
+            padding: 0;
+            width: 48%;
+        }
+
+        .choose label {
+            border-width: 0;
+        }
+
+        .choose .sub-title {
+            overflow: hidden;
+        }
+
+        .choose .item {
+            padding-top: 13px;
+            padding-bottom: 13px;
+            color: #666;
+        }
+
+        .choose .sub-title .arrow-down {
+            float: right;
+            margin-right: 30px;
+            line-height: 47px;
+            color: #ccc;
+        }
+
+        .choose .sub-title span {
+            font-family: "Microsoft YaHei";
+            color: #333;
+        }
+
+        .choose .choose-content {
+            padding-bottom: 5px;
+            border-top: 1px dashed #79abff;
+            overflow: hidden;
+        }
+
+        .choose .choose-wrap{
+            border-bottom: 4px solid #f7f7f7;
+        }
+
+
+    </style>
+</ion-view>

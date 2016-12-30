@@ -1,0 +1,109 @@
+<ion-view view-title="{{titleName}}" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" nav-direction="back" ng-click="submit()">
+            提交
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <ion-list class="yt-form">
+            <ion-toggle toggle-class="toggle-positive" ng-model="checkDataShow.hasProblem" ng-checked="checkDataShow.hasProblem">存在问题</ion-toggle>
+            <ion-input class="item item-input item-icon-right item-link" ng-click="openCheckDate()">
+                <ion-label class="input-ion-input">检查日期</ion-label>
+                <input type="text" value="" readonly ng-model="checkData.checkDate">
+                <i class="icon ion-ios-arrow-right"></i>
+            </ion-input>
+            <ion-input class="item item-input item-icon-right">
+                <ion-label class="input-ion-input">检查人员</ion-label>
+                <input class="text-right" type="text" value="" readonly ng-model="checkDataShow.checker">
+            </ion-input>
+            <ion-input class="item item-input">
+                <ion-label class="input-ion-input">检查位置</ion-label>
+                <input type="text" placeholder="请输入检查位置" value="" ng-model="checkData.checkPosName">
+            </ion-input>
+            <ion-input class="item item-input item-icon-right item-link" ng-click="toChoose('quality/check/quality-solver',url)">
+                <ion-label class="input-ion-input">处理人员</ion-label>
+                <input type="text" placeholder="请选择处理人员" value="" readonly ng-model="checkDataShow.solverName">
+                <i class="icon ion-ios-arrow-right"></i>
+            </ion-input>
+        </ion-list>
+        <div class="list margin-top check-problem-box">
+            <div class="item item-divider item-light">
+                检查图片
+            </div>
+            <div class="item row-no-padding">
+                <div class="upload-img-box col-25" ng-click="addAttachment()">
+                    <div>
+                        <i>+</i>
+
+                        <p>上传图片</p>
+                    </div>
+                </div>
+                <div class="upload-img-box col-25" ng-if="image_list.length>0" ng-repeat="img in image_list" ng-click="previewOrDelete($index)"
+                     upload-img>
+                    <img src="{{img.src}}" style="width: 100%;height: 100%">
+                </div>
+
+            </div>
+            <div ng-show="checkDataShow.hasProblem">
+                <div class="item item-divider item-light">
+                    检查问题
+                    <a class="fr operation" ng-click="toChoose('quality/check/quality-content',url)">
+                        添加
+                    </a>
+                    <!--<i class="icon ion-ios-arrow-right"></i>-->
+                </div>
+                <ion-item ng-repeat="content in contentList">
+                    <a class="fr" ng-click="showConfirmDel(content.id)">删除</a>
+                    <i class="icon ion-ios-arrow-right edit-icon"></i>
+                    <h3 class="first-title">
+                        <span>检查内容</span>
+                        <span class="title">{{content.name}}</span>
+                    </h3>
+                    <div ng-click="toChooseById(content.id,'quality/check/quality-content-problem',url)" ng-if="content.problems.length > 0">
+                        <p class="third-title" ng-repeat="problem in content.problems">
+                            <span>检查问题</span>
+                            <span >{{$index+1}}、{{problem.name}}</span>
+                        </p>
+                    </div>
+                    <div  ng-click="toChooseById(content.id,'quality/check/quality-content-problem',url)" ng-if="content.problems == undefined || content.problems.length <= 0">
+                        <i class="icon ion-record positive second-title-icon"></i>
+                        <p class="second-title">
+                            <span>检查问题</span>
+                            <span style="color: #ef473a;">请添加检查问题</span>
+                        </p>
+                    </div>
+                </ion-item>
+            </div>
+
+        </div>
+    </ion-content>
+
+
+
+    <!-- 检查日期 -->
+    <script id="check-date.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="checkDate">
+        </onezone-datepicker>
+    </script>
+
+    <style type="text/css">
+        .upload-img-box {
+            float: left;
+            padding: 5px;
+            height: 80px;
+            text-align: center;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            width: 25%;
+        }
+        .upload-img-box div {
+            background: #ddd;
+            height: 100%;
+        }
+    </style>
+</ion-view>

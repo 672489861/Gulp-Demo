@@ -1,0 +1,198 @@
+<ion-view view-title="安全检查项目一览" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()"></button>
+    </ion-nav-buttons>
+
+    <!-- 固定搜索框 开始 -->
+
+    <ion-header-bar class="bar-subheader item-input-inset">
+        <div class="bar-stable bar type-one" ng-show="typeId != 1">
+            <label class="item-input-wrapper light-bg">
+                <i class="icon ion-ios-search-strong placeholder-icon" style="padding-top: 3px;"></i>
+                <input type="search" placeholder="请输入项目名称" ng-focus="entering = true" ng-blur="entering = false" ng-model="searchText">
+            </label>
+            <i class="icon ion-ios-close placeholder-icon clear-search" ng-click="clearSearchText()" ng-show="entering"></i>
+        </div>
+        <div class="z-index-13 search-wrap" ng-show="typeId == 1" style="width: 100%;">
+            <ul class="ul-inline search-box">
+                <li class="width-50 search-item" ng-click="openQueryType()" style="border-right-width: 0;">
+                    <p>
+                        <span>选择分公司</span>
+                        <i class="icon ion-chevron-down"></i>
+                    </p>
+                </li>
+                <li class="width-50 search-item" ng-click="openQueryMore()">
+                    <p>
+                        <span>更多筛选</span>
+                        <i class="icon ion-chevron-down"></i>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="projectList.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card has-body-card" ng-repeat="project in projectList | filter: searchFilter"
+             ng-click="toItemList(project.projectId,'safety/multipleCheck/multipleCheck-list',project.editId)">
+            <div class="item">
+                <!--<span class="smart-mark assertive-bg">最新</span>-->
+                <h2>{{project.projectName}}</h2>
+                <div class="card-body">
+
+                    <p>项目经理：{{project.manager}}</p>
+
+                    <p>技术负责人：{{project.technician}}</p>
+
+                    <p>质检员：{{project.inspector}}</p>
+                    <p>安全员：{{project.safetyOfficer}}</p>
+                </div>
+
+                <p>最新检查时间：{{project.checkDate}} &nbsp; &nbsp; &nbsp; &nbsp;<span class="">{{project.checkerName}}</span></p>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 检查类型选择 -->
+    <script id="query-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryType.hide()">取消</button>
+                <h1 class="title">分公司选择</h1>
+                <!--<button class="button button-clear button-primary">确定</button>-->
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-click="searchData()" ng-model="condition.companyId" ng-value="-1">全部</ion-radio>
+                    <ion-radio ng-click="searchData()" ng-model="condition.companyId" ng-value="company.id" ng-repeat="company in companyList">{{company.name}}</ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 高级删选 -->
+    <script id="query-more.html" type="text/ng-template">
+        <div class="modal">
+
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">高级筛选</h1>
+                <button class="button button-clear button-primary" ng-click="clearSearch();$event.stopPropagation();">清空</button>
+            </ion-header-bar>
+            <ion-content  scroll="false">
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openType()">
+                        <ion-label class="input-ion-input">选择检查情况</ion-label>
+                        <input type="text" placeholder="全部" value="" readonly ng-model="condition.statusName">
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">项目名称</ion-label>
+                        <input type="text" placeholder="请输入项目名称" ng-model="condition.projectName">
+                    </ion-input>
+                    <div class="item">
+                        <a class="button button-block button-positive" ng-click="searchData()">查询</a>
+                    </div>
+                </ion-list>
+            </ion-content>
+            <!-- 多个下拉内容，共用一个背景 -->
+            <div class="yt-action-backdrop" ng-class="isTypeOne ? 'active':''"
+                 ng-show="isTypeOne">
+            </div>
+
+            <div class="yt-action-wrapper-bottom" ng-show="isTypeOne" ng-class="isTypeOne ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio ng-click="closeType('不限')" ng-model="condition.statusId" ng-value="0">不限</ion-radio>
+                        <ion-radio ng-click="closeType('未检查')" ng-model="condition.statusId" ng-value="-1">未检查</ion-radio>
+                        <ion-radio ng-click="closeType('已检查')" ng-model="condition.statusId" ng-value="1">已检查</ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+    <style type="text/css">
+        .card, .list-inset {
+            margin:10px 10px;
+        }
+
+        .bar-subheader {
+            top: 44px;
+            height: 44px; }
+        .bar-subheader .search-wrap .ul-inline {
+            width: 100%; }
+        .bar-subheader .search-wrap .ul-inline li {
+            float: left;
+            text-align: center;
+            border-right: 1px solid #ddd;
+            font-size: 15px; }
+        .bar-subheader .search-wrap .ul-inline li .icon {
+            margin-left: 10px;
+            color: #9f9f9f; }
+        .bar-subheader .search-wrap .ul-inline li:last-child {
+            border-right: none; }
+
+        .type-one {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1 0;
+            -moz-box-flex: 1;
+            -moz-flex: 1 0;
+            -ms-flex: 1 0;
+            flex: 1 0;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            -moz-align-items: center;
+            align-items: center;
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            padding-right: 8px;
+            padding-left: 8px;
+            padding-bottom: 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+        }
+        .item-input-inset .bar .item-input-wrapper input {
+            width: 70%;
+            /*height: 24px;*/
+            /*line-height: 24px;*/
+            padding-left: 15px;
+        }
+        .item-input-inset .bar .item-input-wrapper .placeholder-icon:first-child {
+            /*margin-top: 1px;*/
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            margin-top: -10px;
+        }
+        .item-input-inset .bar .item-input-wrapper {
+            margin-top: -1px; }
+        .item-input-inset .bar .item-input-wrapper input {
+            padding-left: 20px;
+            padding-right: 8px;
+            width: 85%;
+            height: 24px;
+            background: transparent; }
+
+    </style>
+
+</ion-view>

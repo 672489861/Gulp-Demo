@@ -1,0 +1,487 @@
+<ion-view view-title="项目信息">
+
+    <!-- 固定搜索框 开始 -->
+    <ion-header-bar class="bar-subheader item-input-inset z-index-13">
+        <ul class="ul-inline">
+            <li class="width-50" ng-click="openQueryTypeUp()"><span>所属公司</span><i class="icon ion-chevron-down"></i>
+            </li>
+            <li class="width-50" ng-click="openQueryMore()"><span>更多筛选</span><i class="icon ion-chevron-down"></i></li>
+        </ul>
+    </ion-header-bar>
+    <!-- 固定搜索框 结束 -->
+
+    <ion-content>
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+
+        <div class="empty-info" ng-if="!hasNextPage && projectList.length == 0 ">
+            <i class="ion-android-alert"></i>
+            <p>没有找到符合条件的结果！</p>
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card margin-top" ng-repeat="project in projectList">
+            <div class="item has-mark" ng-click="viewDetail(project.id)" style="position: relative">
+                <span class="smart-mark {{project.iscompleted!=0?(project.iscompleted==1?'royal-bg':'positive-bg'):'calm-bg'}}">{{project.isCompletedText}}</span>
+
+                <p><span class="title">项目识别码：</span>{{project.code}}</p>
+
+                <p><span class="title">项目名称：</span>{{project.name}}</p>
+
+                <p class="nomargin"><span class="title">项目所在地：</span>{{project.province}}{{project.city}}{{project.address}}
+                </p>
+            </div>
+        </div>
+        <!-- 滚动加载 -->
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+
+    <!-- 高级删选 -->
+    <script id="query-more.html" type="text/ng-template" ng-init="hideForKeybroad=true">
+        <div class="modal">
+
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="modalQueryMore.hide()">取消</button>
+                <h1 class="title">项目筛选</h1>
+                <button class="button button-clear button-primary" ng-click="resetCondition()">清空</button>
+            </ion-header-bar>
+            <ion-content class="has-footer">
+                <ion-list class="yt-form">
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openQueryTypeLeft()">
+                        <!--<ion-input class="item item-input item-icon-right item-link" ui-sref="project-list">-->
+                        <ion-label class="input-ion-input">项目所属公司</ion-label>
+                        <input type="text" placeholder="{{condition.org.orgName}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openProvince()">
+                        <ion-label class="input-ion-input">项目所在地</ion-label>
+                        <input type="text" placeholder="{{condition.provinceText}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openContractForm()">
+                        <ion-label class="input-ion-input">承包形式</ion-label>
+                        <input type="text" placeholder="{{condition.contractMode.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openFundsProvided()">
+                        <ion-label class="input-ion-input">资金来源</ion-label>
+                        <input type="text" placeholder="{{condition.fundingSources.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <!--<ion-input class="item item-input item-icon-right item-link">-->
+                    <!--<ion-label class="input-ion-input">建设单位名称</ion-label>-->
+                    <!--<input type="text" placeholder="暂未开发" value="" readonly>-->
+                    <!--<i class="icon ion-ios-arrow-right"></i>-->
+                    <!--</ion-input>-->
+                    <ion-input class="item item-input item-icon-right item-link"
+                               ng-click="openTime('start-time1.html')">
+                        <ion-label class="input-ion-input">开工时间（起）</ion-label>
+                        <input type="text" placeholder="{{condition.startTime.min}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link"
+                               ng-click="openTime('start-time2.html')">
+                        <ion-label class="input-ion-input">开工时间（止）</ion-label>
+                        <input type="text" placeholder="{{condition.startTime.max}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openTime('end-time1.html')">
+                        <ion-label class="input-ion-input">竣工时间（起）</ion-label>
+                        <input type="text" placeholder="{{condition.endTime.min}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openTime('end-time2.html')">
+                        <ion-label class="input-ion-input">竣工时间（止）</ion-label>
+                        <input type="text" placeholder="{{condition.endTime.max}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openBuildType()">
+                        <ion-label class="input-ion-input">建筑类别</ion-label>
+                        <input type="text" placeholder="{{condition.buildingType.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openProjectProperty()">
+                        <ion-label class="input-ion-input">项目性质</ion-label>
+                        <input type="text" placeholder="{{condition.property.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openStructural()">
+                        <ion-label class="input-ion-input">结构形式</ion-label>
+                        <input type="text" placeholder="{{condition.structuralForm.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">最小合同金额(万元)</ion-label>
+                        <input type="number" ng-model="condition.amount.min" placeholder="请输入最小金额">
+                    </ion-input>
+                    <ion-input class="item item-input">
+                        <ion-label class="input-ion-input">最大合同金额(万元)</ion-label>
+                        <input type="number" ng-model="condition.amount.max" placeholder="请输入最大金额">
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openIsComplete()">
+                        <ion-label class="input-ion-input">是否竣工</ion-label>
+                        <input type="text"
+                               placeholder="{{condition.isCompleted==-1?'不限':condition.isCompleted==0?'未竣工':'已竣工'}}"
+                               value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openManager()">
+                        <ion-label class="input-ion-input">项目经理</ion-label>
+                        <input type="text" placeholder="{{condition.manager.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <ion-input class="item item-input item-icon-right item-link" ng-click="openTechnicalDirector()">
+                        <ion-label class="input-ion-input">技术负责人</ion-label>
+                        <input type="text" placeholder="{{condition.director.name}}" value="" readonly>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-input>
+                    <!--<ion-input class="item item-input">-->
+                    <!--<ion-label class="input-ion-input">获得奖项</ion-label>-->
+                    <!--<input type="text" placeholder="请输入获得奖项">-->
+                    <!--</ion-input>-->
+                </ion-list>
+            </ion-content>
+            <div class="bar bar-footer bar-positive hide-on-keyboard-open" ng-if="hideForKeybroad">
+                <div class="title" ng-click="doPrjSearch()">查询</div>
+            </div>
+
+            <!-- 多个下拉内容，共用一个背景 -->
+            <div class="yt-action-backdrop" ng-class="isComplete ? 'active':''"
+                 ng-show="isComplete"
+                 ng-click="close()"></div>
+
+            <!-- 是否竣工 弹框 -->
+            <div class="yt-action-wrapper-bottom" ng-show="isComplete" ng-class="isComplete ? 'yt-action-up':''">
+                <div class="yt-action">
+                    <ion-list>
+                        <ion-radio name="isCompleted" ng-click="close()" ng-value="-1" ng-model="condition.isCompleted">
+                            不限
+                        </ion-radio>
+                        <ion-radio name="isCompleted" ng-click="close()" ng-value="1" ng-model="condition.isCompleted">
+                            竣工
+                        </ion-radio>
+                        <ion-radio name="isCompleted" ng-click="close()" ng-value="0" ng-model="condition.isCompleted">
+                            未竣工
+                        </ion-radio>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 所属公司列表 -->
+    <script id="query-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="hideQueryType()">取消</button>
+                <h1 class="title">项目所属公司</h1>
+            </ion-header-bar>
+            <!-- 固定搜索框 开始 -->
+            <div class="bar bar-subheader item-input-inset bar-stable">
+                <label class="item-input-wrapper light-bg">
+                    <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+                    <input type="search" placeholder="请输入公司名称" ng-focus="entering = true" ng-blur="entering = false"
+                           ng-model="searchText">
+                    <i class="icon ion-ios-close placeholder-icon" ng-show="entering"></i>
+                </label>
+            </div>
+            <!-- 固定搜索框 结束 -->
+            <ion-content class="has-subheader">
+                <ion-list>
+                    <ion-radio ng-repeat="org in companyList|filter:{name:searchText}" ng-value="org.id"
+                               ng-model="condition.org.orgId" ng-click="hideQueryType(org)">{{org.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 项目所在地（省）列表 -->
+    <script id="province.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <h1 class="title">项目所在地（省）</h1>
+                <button class="button button-clear button-primary" ng-click="modalProvince.hide()">确定</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-checkbox ng-repeat="province in condition.provinces" class="item-icon-right"
+                                  ng-checked="province.checked" ng-model="province.checked"
+                                  ng-click="selectProvince(province)">
+                        {{province.name}}
+                        <span class="item-note">{{province.cityText}}</span>
+                        <i class="icon ion-ios-arrow-right"></i>
+                    </ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 项目所在地（市）列表 -->
+    <script id="city.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <h1 class="title">{{province.name}}</h1>
+                <button class="button button-clear button-primary" ng-click="selectCity()">确定</button>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-checkbox ng-repeat="city in cities" ng-model="city.checked">{{city.name}}</ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 承包形式列表 -->
+    <script id="contract-form.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="contractForm.hide()">关闭</button>
+                <h1 class="title">承包形式</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-checkbox ng-repeat="mode in contractModes" ng-model="condition.contractMode.Aid"
+                                  ng-true-value="{{mode.id}}" name="mode" class="item-icon-right"
+                                  ng-click="selectContractModeA(mode)">
+                        {{mode.name}}
+                        <span class="item-note" ng-show="condition.contractMode.Aid==mode.id">{{condition.contractMode.name}}</span>
+                        <i ng-show="mode.subs.length>0" class="icon ion-ios-arrow-right"></i>
+                    </ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 承包形式详细列表 -->
+    <script id="contract-form-detail.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <h1 class="title">{{condition.contractMode.AName}}</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio name="mode" ng-repeat="mode in contractModesB" ng-model="condition.contractMode.Bid"
+                               ng-value="{{mode.id}}" ng-click="selectContractModeB(mode)">{{mode.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 资金来源 -->
+    <script id="funds-provided.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="fundsProvided.hide()">关闭</button>
+                <h1 class="title">资金来源</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-repeat="source in fundingSources" ng-model="condition.fundingSources.id"
+                               ng-value="{{source.id}}" ng-click="selectFundSource(source)">{{source.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 建筑类别 -->
+    <script id="build-type.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="buildType.hide()">关闭</button>
+                <h1 class="title">建筑类别</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-checkbox ng-repeat="buildType in buildingTypes" ng-model="condition.buildingType.Aid"
+                                  ng-true-value="{{buildType.id}}" class="item-icon-right"
+                                  ng-click="selectBuildingTypeA(buildType)">
+                        {{buildType.name}}
+                        <span class="item-note" ng-show="condition.buildingType.Aid==buildType.id">{{condition.buildingType.BName}}</span>
+                        <i class="icon ion-ios-arrow-right" ng-show="buildType.subs.length>0"></i>
+                    </ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 建筑类别 -->
+    <script id="build-type-detail.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <h1 class="title">{{condition.buildingType.AName}}</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-checkbox ng-repeat="buildType in buildingTypesB" ng-model="condition.buildingType.Bid"
+                                  ng-true-value="{{buildType.id}}" class="item-icon-right"
+                                  ng-click="selectBuildingTypeB(buildType)">
+                        {{buildType.name}}
+                        <span class="item-note"
+                              ng-show="(condition.buildingType.Bid==buildType.id)&&(buildType.subs.length>0)">{{condition.buildingType.name}}</span>
+                        <i class="icon ion-ios-arrow-right" ng-show="buildType.subs.length>0"></i></ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 建筑类别 -->
+    <script id="build-type-detail-detail.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <h1 class="title">{{condition.buildingType.BName}}</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-repeat="buildType in buildingTypesC" ng-model="condition.buildingType.Cid"
+                               ng-value="{{buildType.id}}" ng-click="selectBuildingTypeC(buildType)">
+                        {{buildType.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 项目性质 -->
+    <script id="project-property.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="projectProperty.hide()">关闭</button>
+                <h1 class="title">项目性质</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio ng-repeat="property in projectProperties" ng-model="condition.property.id"
+                               ng-value="{{property.id}}" ng-click="selectProperty(property)">{{property.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 结构性质 -->
+    <script id="structural.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="structural.hide()">关闭</button>
+                <h1 class="title">结构性质</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-checkbox class="item-icon-right" ng-repeat="form in structuralForms"
+                                  ng-model="condition.structuralForm.Aid" ng-true-value="{{form.id}}"
+                                  ng-click="selectStructuralFormA(form)">
+                        {{form.name}}
+                        <span class="item-note" ng-show="condition.structuralForm.Aid==form.id">{{condition.structuralForm.name}}</span>
+                        <i ng-show="form.subs.length>0" class="icon ion-ios-arrow-right"></i>
+                    </ion-checkbox>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 结构性质详细 -->
+    <script id="structural-detail.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <h1 class="title">{{condition.structuralForm.AName}}</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <ion-radio name="form" ng-repeat="form in structuralFormsB" ng-model="condition.structuralForm.Bid"
+                               ng-value="{{form.id}}" ng-click="selectStructuralFormB(form)">{{form.name}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+    <!-- 项目经理 -->
+    <script id="manager.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="manager.hide()">取消</button>
+                <h1 class="title">项目经理姓名</h1>
+            </ion-header-bar>
+            <!-- 固定搜索框 开始 -->
+            <div class="bar bar-subheader item-input-inset bar-stable">
+                <label class="item-input-wrapper light-bg">
+                    <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+                    <input type="search" placeholder="请输入项目经理姓名" ng-focus="entering = true"
+                           ng-blur="entering = false"
+                           ng-model="condition.managerText">
+                    <i class="icon ion-ios-close placeholder-icon" ng-show="entering"></i>
+                </label>
+            </div>
+            <!-- 固定搜索框 结束 -->
+            <ion-content class="has-subheader">
+                <ion-list>
+                    <ion-radio name="manager" ng-model="condition.manager.id" ng-value="0" ng-click="selectManager()">
+                        不限
+                    </ion-radio>
+                    <ion-radio name="manager" ng-repeat="emp in emps|filter:{realName:managerText}"
+                               ng-model="condition.manager.id"
+                               ng-value="{{emp.id}}" ng-click="selectManager(emp)">{{emp.realName}}-{{emp.orgName}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 技术负责人 -->
+    <script id="technical-director.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar class="bar-positive" align-title="center">
+                <button class="button button-clear button-primary" ng-click="technicalDirector.hide()">取消</button>
+                <h1 class="title">技术负责人姓名</h1>
+            </ion-header-bar>
+            <!-- 固定搜索框 开始 -->
+            <div class="bar bar-subheader item-input-inset bar-stable">
+                <label class="item-input-wrapper light-bg">
+                    <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+                    <input type="search" placeholder="请输入技术负责人姓名" ng-focus="entering = true"
+                           ng-blur="entering = false"
+                           ng-model="condition.directorText">
+                    <i class="icon ion-ios-close placeholder-icon" ng-show="entering"></i>
+                </label>
+            </div>
+            <!-- 固定搜索框 结束 -->
+            <ion-content class="has-subheader">
+                <ion-list>
+                    <ion-radio name="director" ng-model="condition.director.id" ng-value="0"
+                               ng-click="selectDirector()">不限
+                    </ion-radio>
+                    <ion-radio name="director" ng-repeat="manager in emps|filter:{realName:directorText}"
+                               ng-model="condition.director.id"
+                               ng-value="{{manager.id}}" ng-click="selectDirector(manager)">
+                        {{manager.realName}}-{{manager.orgName}}
+                    </ion-radio>
+                </ion-list>
+            </ion-content>
+        </div>
+    </script>
+
+    <!-- 开工时间（起） -->
+    <script id="start-time1.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime1">
+        </onezone-datepicker>
+    </script>
+    <!-- 开工时间（止） -->
+    <script id="start-time2.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime2">
+        </onezone-datepicker>
+    </script>
+    <!-- 竣工时间（起） -->
+    <script id="end-time1.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="endTime1">
+        </onezone-datepicker>
+    </script>
+    <!-- 竣工时间（止） -->
+    <script id="end-time2.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="endTime2">
+        </onezone-datepicker>
+    </script>
+
+    <style type="text/css">
+        .backdrop {
+            z-index: 11;
+        }
+    </style>
+</ion-view>

@@ -1,0 +1,27 @@
+<ion-view view-title="设备信息">
+    <div class="bar bar-subheader nopadding">
+        <p class="head-title">设备费用总计：{{equipmentSum}}元</p>
+    </div>
+    <ion-content class="has-subheader">
+        <ion-list ng-repeat="item in equipmentInfo">
+            <ion-item class="margin-bottom">
+                <h2 class="padding-bottom">{{item.deviceName}}</h2>
+                <table class="table-detail">
+                    <tbody>
+                    <tr>
+                        <td width="60%" height="25"><span class="note">型号：{{item.specification}}</span></td>
+                        <td><span class="note">数量：</span>{{item.quantity}}</td>
+                    </tr>
+                    <tr>
+                        <td height="25"><span class="note">计量单位：</span>{{item.measurementUnit}}</td>
+                        <td><span class="note">租赁单价（元）：</span>{{item.rentPrice}}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="note">赔偿单价（元）：</span>{{item.compensatePrice}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

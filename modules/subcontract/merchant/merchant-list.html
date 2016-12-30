@@ -1,0 +1,40 @@
+<ion-view view-title="分包单位" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button buttons button-clear button-icon ion-ios-arrow-left header-item"
+                ng-click="back()" nav-direction="back"></button>
+    </ion-nav-buttons>
+    <ion-header-bar class="bar-subheader item-input-inset bar-stable">
+        <label class="item-input-wrapper light-bg">
+            <i class="icon ion-ios-search-strong placeholder-icon nopadding"></i>
+            <input type="search" placeholder="请输入单位名称" ng-focus="entering = true" ng-blur="entering = false"
+                   ng-model="searchText">
+        </label>
+        <i class="icon ion-ios-close placeholder-icon clear-search" ng-click="clearSearchText()" ng-show="entering"></i>
+    </ion-header-bar>
+
+    <ion-content class="has-subhead">
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="refreshListData()" pulling-text="下拉刷新数据" refreshing-text="刷新中..."
+                       refreshing-icon="ion-loading-b"></ion-refresher>
+        <div class="empty-info" ng-if="!hasNextPage && merchantList.length == 0 ">
+            <i class="ion-android-alert"></i>
+
+            <p>没有找到符合条件的结果！</p>
+
+            <p>请下拉刷新！</p>
+        </div>
+        <div class="card margin-top"  ng-repeat="merchant in merchantList | filter: searchFilter" >
+            <div class="item has-mark">
+
+                <p><span class="title">分包单位名称：</span>{{merchant.name}}</p>
+
+                <p><span class="title">计量总金额：</span>{{merchant.measureTotal}} 元</p>
+
+                <p class="nomargin"><span class="title">结算总金额：</span>{{merchant.costTotal}} 元</p>
+
+                <p class="nomargin"><span class="title">合同总金额：</span>{{merchant.settlementTotal}} 元</p>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadListData()" distance="1%" ng-if="hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

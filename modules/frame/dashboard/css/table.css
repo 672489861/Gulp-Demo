@@ -1,0 +1,123 @@
+.table .select-wrap {
+    padding: 12px 15px;
+    background-color: #fff;
+    border-top: 1px solid #f2f2f2;
+}
+
+.table .select-wrap .center{
+    width: 235px;
+    margin: auto;
+}
+
+.table .select-wrap .item-select{
+    display: inline-block;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.table .select-wrap .item-select.year{
+    width: 70px;
+}
+
+.table .select-wrap .item-select.type{
+    width: 120px;
+}
+
+.table .select-wrap select{
+    max-width: 100%;
+    width: 100%;
+    padding: 0 20px 0 10px;
+    font-weight: bold;
+    color: #666;
+}
+
+.table .select-wrap .center span{
+    font-weight: bold;
+    color: #666;
+}
+
+.table .select-wrap .item-select:after{
+    right:5px;
+}
+
+.table .select-wrap select option {
+    line-height: 26px;
+    color: #666;
+    background-color: #fff;
+    font-size: 14px;
+}
+
+.table .memo {
+    padding: 8px 15px;
+    margin: 0;
+    line-height: 20px;
+    font-size: 12px;
+    color: #999;
+}
+
+.table .blue{
+    color: #78a3ed;
+}
+
+.table .red{
+    color: #f87d7d;
+}
+
+.table .orange{
+    color: #f5a423;
+}
+
+.table .yellow{
+    color: #d0ce00;
+}
+
+.table .green{
+    color: #68d5ae;
+}
+
+.table .table-list {
+    padding: 0 15px;
+    background-color: #fff;
+}
+
+.table .table {
+    width: 100%;
+}
+
+.table .table th,
+.table .table td {
+    text-align: left;
+    line-height: 45px;
+    border-bottom: 1px solid #f2f2f2;
+    padding: 0 2px;
+    white-space: nowrap;
+}
+
+.table .table th{
+    border-top:1px solid #f2f2f2;
+}
+
+.table .table th img {
+    vertical-align: middle;
+}
+
+.table .table td {
+    font-size: 12px;
+    color: #666;
+}
+
+.table .company {
+    margin: 0;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.table .col-5 td p {
+    max-width: 100px;
+}
+
+.contract .col-3 th,
+.contract .col-3 td {
+    padding-left: 5%;
+}

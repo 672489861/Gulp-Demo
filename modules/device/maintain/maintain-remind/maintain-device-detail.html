@@ -1,0 +1,133 @@
+<ion-view view-title="待维保设备">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" nav-direction="back" ng-click="showConfirm()">
+            维保
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <h3 class="page-detail-title text-center">{{deviceRemindInfo.number}}</h3>
+        <div class="list">
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showBaseInfo = true;"
+                 ng-click="showBaseInfo=!showBaseInfo">
+                <p>基本信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showBaseInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showBaseInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">设备名称</td>
+                        <td align="right">{{deviceRemindInfo.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>型号/规格</td>
+                        <td align="right">{{deviceRemindInfo.specifications}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showRemindInfo = true;"
+                 ng-click="showRemindInfo=!showRemindInfo">
+                <p>维保信息</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showRemindInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showRemindInfo">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td width="35%">维保周期</td>
+                        <td align="right">
+                            {{deviceRemindInfo.maintainInterval}}
+                            <span ng-if="deviceRemindInfo.maintainIntervalunit==0">年</span>
+                            <span ng-if="deviceRemindInfo.maintainIntervalunit==1">月</span>
+                            <span ng-if="deviceRemindInfo.maintainIntervalunit==2">日</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>上次维保时间</td>
+                        <td align="right">{{deviceRemindInfo.lastmaintainTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>下次维保时间</td>
+                        <td align="right">{{deviceRemindInfo.nextmaintainTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>维保状态</td>
+                        <td align="right">{{deviceRemindInfo.remindText}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showCheckEdit = true;"
+                 ng-click="showCheckEdit=!showCheckEdit">
+                <p>维保处理</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showCheckEdit?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding-vertical" ng-show="showCheckEdit">
+                <table class="table-row">
+                    <tbody>
+                    <tr>
+                        <td>维保时间</td>
+                        <td align="right" class="link" ng-click="openStartTime()">
+                            <span>{{condition.startTime}}</span><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr>
+                        <td>维保单位</td>
+                        <td align="right"><input style="height: 100%; line-height: 100%; text-align: right" type="text" ng-model="condition.unit" placeholder="请输入维保单位"></td>
+                    </tr>
+                    <tr>
+                        <td>维保费用</td>
+                        <td align="right"><input style="height: 100%; line-height: 100%; text-align: right" type="text" ng-model="condition.cost" placeholder="请输入维保费用"></td>
+                    </tr>
+                    <tr>
+                        <td>检验结论</td>
+                        <td align="right" class="link" ng-click="openCheckResult()"
+                            ng-model="condition.conclusionName" placeholder="请选择维保结论">
+                            <span>{{condition.conclusionName}}</span><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    <tr>
+                        <td>故障分析及处理</td>
+                        <td align="right" class="link" ng-click="toBreakDown()"><span>{{condition.breakdownName}}</span><i class="icon ion-ios-arrow-right"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item item-divider item-divider-title item-icon-right" ng-init="showAttachmentInfo = true;"
+                 ng-click="showAttachmentInfo=!showAttachmentInfo" ng-click="showAttachmentInfo">
+                <p>附件上传</p>
+                <i class="icon ion-ios-arrow-up" ng-class="showAttachmentInfo?'ion-ios-arrow-down':'ion-ios-arrow-up'"></i>
+            </div>
+            <div class="item nopadding" ng-show="showAttachmentInfo">
+                <div class="upload-img-box col-25" ng-repeat="image in image_list" ng-click="image.item.src? previewOrDelete($index) : addAttachment($index)">
+                    <div ng-hide="image.item.src">
+                        <i>+</i>
+                        <p>上传附件</p>
+                    </div>
+                    <div  ng-show="image.item.src">
+                        <img src="{{image.item.src}}" style="width: 100%;height: 100%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+    <!-- 多个下拉内容，共用一个背景 -->
+    <div class="yt-action-backdrop" ng-class="isCheckResult ? 'active':''"
+         ng-show="isCheckResult"
+         ng-click="close()"></div>
+
+    <!-- 维保结果-->
+    <div class="yt-action-wrapper-bottom" ng-show="isCheckResult" ng-class="isCheckResult ? 'yt-action-up':''">
+        <div class="yt-action">
+            <ion-list>
+                <ion-radio ng-repeat="conclusion in conclusions" ng-click="closeCheckResult(conclusion)" ng-model="condition.conclusionId" ng-value="{{conclusion.id}}">{{conclusion.name}}</ion-radio>
+            </ion-list>
+        </div>
+    </div>
+    <!-- 维保时间 -->
+    <script id="start-time.html" type="text/ng-template">
+        <onezone-datepicker datepicker-object="startTime">
+        </onezone-datepicker>
+    </script>
+</ion-view>
